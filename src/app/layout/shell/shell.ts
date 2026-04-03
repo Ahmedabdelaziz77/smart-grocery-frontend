@@ -1,5 +1,5 @@
 import { Component, computed, inject } from '@angular/core';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 
 @Component({
@@ -11,6 +11,7 @@ import { AuthService } from '../../core/services/auth.service';
 export class Shell {
 
   private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
 
   readonly currentUser = this.authService.currentUser;
   readonly role = this.authService.role;
@@ -29,5 +30,16 @@ export class Shell {
         { label: 'My Shopping List', route: '/shopping-list' }
       ];
     });
+
+  onLogout(): void {
+    this.authService.logout().subscribe({
+      next: () => {
+        this.router.navigate(['/auth']);
+      },
+      error: () => {
+        this.router.navigate(['/auth']);
+      }
+    });
+  }
 
 }
