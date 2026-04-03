@@ -2,9 +2,8 @@
   <aside class="sidebar">
     <div class="sidebar__top">
       <div class="logo">SmartGrocery</div>
-
       <nav class="nav">
-        @for (item of navItems; track item.route) {
+        @for (item of navItems(); track item.route) {
         <a class="nav__link" [routerLink]="item.route" routerLinkActive="nav__link--active">
           {{ item.label }}
         </a>
@@ -14,8 +13,12 @@
 
     <div class="sidebar__bottom">
       <div class="user-box">
-        <div class="user-box__name">John Doe</div>
-        <div class="user-box__role">USER</div>
+        <div class="user-box__name">
+          {{ currentUser()?.fullName || 'Guest User' }}
+        </div>
+        <div class="user-box__role">
+          {{ role() || 'USER' }}
+        </div>
       </div>
 
       <button class="logout-btn" type="button">Logout</button>

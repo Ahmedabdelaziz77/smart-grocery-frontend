@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-shell',
@@ -8,12 +9,25 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
   styleUrl: './shell.scss',
 })
 export class Shell {
-  navItems = [
-    { label: 'Dashboard', route: '/admin/dashboard' },
-    { label: 'Product Import', route: '/admin/import' },
-    { label: 'Approved Products', route: '/admin/products' },
-    { label: 'Grocery Items', route: '/groceries' },
-    { label: 'My Shopping List', route: '/shopping-list' }
-  ];
+
+  private readonly authService = inject(AuthService);
+
+  readonly currentUser = this.authService.currentUser;
+  readonly role = this.authService.role;
+
+  readonly navItems = computed(() => {
+      if (this.role() === 'ADMIN') {
+        return [
+          { label: 'Dashboard', route: '/admin/dashboard' },
+          { label: 'Product Import', route: '/admin/import' },
+          { label: 'Approved Products', route: '/admin/products' }
+        ];
+      }
+
+      return [
+        { label: 'Grocery Items', route: '/groceries' },
+        { label: 'My Shopping List', route: '/shopping-list' }
+      ];
+    });
 
 }
