@@ -1,3 +1,73 @@
-<div class="page-placeholder">
-  <h1>Auth Page</h1>
+<div class="auth-page">
+  <mat-card class="auth-card">
+    <div class="auth-logo">
+      <div class="auth-logo__icon">🥬</div>
+    </div>
+
+    <h1 class="auth-title">SmartGrocery</h1>
+    <p class="auth-subtitle">
+      {{
+        isSignupMode()
+          ? 'Create your account to start managing your grocery shopping list'
+          : 'Enter your credentials to access your account'
+      }}
+    </p>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="auth-form">
+      @if (isSignupMode()) {
+      <div class="field-block">
+        <label class="field-label">Full Name</label>
+        <mat-form-field appearance="outline">
+          <input matInput formControlName="fullName" placeholder="John Doe" />
+          @if (form.get('fullName')?.hasError('required') && form.get('fullName')?.touched) {
+          <mat-error>Full name is required</mat-error>
+          }
+          @if (form.get('fullName')?.hasError('minlength') && form.get('fullName')?.touched) {
+          <mat-error>Full name must be at least 3 characters</mat-error>
+          }
+        </mat-form-field>
+      </div>
+      }
+
+      <div class="field-block">
+        <label class="field-label">Email</label>
+        <mat-form-field appearance="outline">
+          <input matInput type="email" formControlName="email" placeholder="name@example.com" />
+          @if (form.get('email')?.hasError('required') && form.get('email')?.touched) {
+          <mat-error>Email is required</mat-error>
+          }
+          @if (form.get('email')?.hasError('email') && form.get('email')?.touched) {
+          <mat-error>Enter a valid email address</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <div class="field-block">
+        <label class="field-label">Password</label>
+        <mat-form-field appearance="outline">
+          <input matInput type="password" formControlName="password" placeholder="••••••••" />
+          @if (form.get('password')?.hasError('required') && form.get('password')?.touched) {
+          <mat-error>Password is required</mat-error>
+          }
+          @if (form.get('password')?.hasError('minlength') && form.get('password')?.touched) {
+          <mat-error>Password must be at least 6 characters</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <button mat-flat-button type="submit" class="submit-btn">
+        {{ isSignupMode() ? 'Sign up' : 'Sign in' }}
+      </button>
+    </form>
+
+    <div class="auth-footer">
+      <span>
+        {{ isSignupMode() ? 'Already have an account?' : "Don't have an account?" }}
+      </span>
+
+      <button mat-button type="button" class="switch-btn" (click)="toggleMode()">
+        {{ isSignupMode() ? 'Sign in' : 'Sign up' }}
+      </button>
+    </div>
+  </mat-card>
 </div>
