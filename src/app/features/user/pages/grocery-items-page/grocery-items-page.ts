@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { Product } from '../../../../core/models/product.model';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -7,6 +7,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { ProductService } from '../../../../core/services/product.service';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-grocery-items-page',
@@ -26,27 +28,85 @@ export class GroceryItemsPage {
   readonly searchTerm = signal('');
   readonly selectedCategory = signal('');
 
-  readonly categories = [
-    'Vegetables',
-    'Fruits',
-    'Dairy',
-    'Bakery',
-    'Snacks'
-  ];
+  private readonly productService = inject(ProductService);
 
-  readonly products: Product[] = [
-    {
-      id: 1,
-      name: 'Organic Bananas',
-      brand: 'Fresh Farm',
-      category: 'Fruits',
-      description: 'Sweet organic bananas rich in potassium.',
-      imageUrl: 'https://via.placeholder.com/300x200?text=Bananas',
-      calories: 89,
-      protein: 1.1,
-      carbs: 22.8,
-      fat: 0.3,
-      estimatedPrice: 2.99
+  readonly categories = signal<string[]>([]);
+  readonly products = signal<Product[]>([]);
+  readonly loading = signal(false);
+
+  readonly page = signal(0);
+  readonly size = 8;
+  readonly totalPages = signal(0);
+  readonly totalElements = signal(0);
+  readonly isFirstPage = signal(true);
+  readonly isLastPage = signal(true);
+
+  ngOnInit(): void {
+    this.loadCategories();
+    this.loadProducts();
+  }
+
+  loadProducts(page = 0): void {
+    this.loading.set(true);
+
+    const name = this.searchTerm().trim();
+    const category = this.selectedCategory().trim();
+
+    const request$ =
+      name || category
+        ? this.productService.searchProducts(name, category, page, this.size)
+        : this.productService.getProducts(page, this.size);
+
+    request$
+      .pipe(finalize(() => this.loading.set(false)))
+      .subscribe({
+        next: (response) => {
+          this.products.set(response.content);
+          this.page.set(response.page);
+          this.totalPages.set(response.totalPages);
+          this.totalElements.set(response.totalElements);
+          this.isFirstPage.set(response.first);
+          this.isLastPage.set(response.last);
+        },
+        error: (error) => {
+          console.error('Failed to load products!!', error);
+          this.products.set([]);
+        }
+      });
+  }
+
+  loadCategories(): void {
+    this.productService.getCategories().subscribe({
+      next: (categories) => this.categories.set(categories),
+      error: (error) => {
+        console.error('Failed to load categories', error);
+        this.categories.set([]);
+      }
+    });
+  }
+
+  onSearch(): void {
+    this.loadProducts(0);
+  }
+
+  onCategoryChange(category: string): void {
+    this.selectedCategory.set(category);
+    this.loadProducts(0);
+  }
+
+  goToPreviousPage(): void {
+    if (this.isFirstPage()) {
+      return;
     }
-  ];
+
+    this.loadProducts(this.page() - 1);
+  }
+
+  goToNextPage(): void {
+    if (this.isLastPage()) {
+      return;
+    }
+
+    this.loadProducts(this.page() + 1);
+  }
 }
