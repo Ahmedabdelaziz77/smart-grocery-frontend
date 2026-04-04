@@ -2,13 +2,14 @@ import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { RouterLink } from '@angular/router';
 import { ShoppingListService } from '../../../../core/services/shopping-list.service';
 import { ShoppingList } from '../../../../core/models/shopping-list.model';
 import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-shopping-list-page',
-  imports: [CommonModule, MatButtonModule, MatCardModule],
+  imports: [CommonModule, RouterLink, MatButtonModule, MatCardModule],
   templateUrl: './shopping-list-page.html',
   styleUrl: './shopping-list-page.scss',
 })
