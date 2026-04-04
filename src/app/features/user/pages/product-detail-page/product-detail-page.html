@@ -1,3 +1,80 @@
-<div class="page-placeholder">
-  <h1>Product Detail Page</h1>
+<div class="detail-page">
+  @if (loading()) {
+  <div class="state-message">Loading product...</div>
+  } @else if (!product()) {
+  <div class="state-message">Product not found.</div>
+  } @else {
+  <a class="back-link" [routerLink]="['/groceries']">← Back to Groceries</a>
+
+  <div class="detail-layout">
+    <div class="detail-image-panel">
+      <img [src]="product()!.imageUrl" [alt]="product()!.name" class="detail-image" />
+    </div>
+
+    <div class="detail-info-panel">
+      <div class="category-badge">
+        {{ product()!.category }}
+      </div>
+
+      <h1>
+        {{ product()!.name }}
+      </h1>
+      <p class="brand">
+        {{ product()!.brand }}
+      </p>
+
+      <div class="price">$
+        {{ product()!.estimatedPrice }}
+      </div>
+
+      <p class="description">
+        {{ product()!.description || 'No description available for this product.' }}
+      </p>
+
+      <div class="nutrition-card">
+        <div class="nutrition-title">Nutrition Facts</div>
+
+        <div class="nutrition-grid">
+          <div class="nutrition-item">
+            <strong>
+              {{ product()!.calories }}</strong>
+            <span>Calories</span>
+          </div>
+
+          <div class="nutrition-item">
+            <strong>
+              {{ product()!.protein }}g</strong>
+            <span>Protein</span>
+          </div>
+
+          <div class="nutrition-item">
+            <strong>
+              {{ product()!.carbs }}g</strong>
+            <span>Carbs</span>
+          </div>
+
+          <div class="nutrition-item">
+            <strong>
+              {{ product()!.fat }}g</strong>
+            <span>Fat</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="action-row">
+        <div class="quantity-box">
+          <button type="button" (click)="decreaseQuantity()">−</button>
+          <span>
+            {{ quantity() }}</span>
+          <button type="button" (click)="increaseQuantity()">+</button>
+        </div>
+
+        <button type="button" class="add-btn">
+          Add to List · $
+          {{ totalPrice() }}
+        </button>
+      </div>
+    </div>
+  </div>
+  }
 </div>

@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { Product } from '../../../../core/models/product.model';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -24,7 +24,7 @@ import { finalize } from 'rxjs';
   templateUrl: './grocery-items-page.html',
   styleUrl: './grocery-items-page.scss',
 })
-export class GroceryItemsPage {
+export class GroceryItemsPage implements OnInit{
   readonly searchTerm = signal('');
   readonly selectedCategory = signal('');
 
