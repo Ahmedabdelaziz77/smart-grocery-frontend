@@ -8,6 +8,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ProductService } from '../../../../core/services/product.service';
+import { ShoppingListService } from '../../../../core/services/shopping-list.service';
 import { finalize } from 'rxjs';
 
 @Component({
@@ -29,6 +30,7 @@ export class GroceryItemsPage implements OnInit{
   readonly selectedCategory = signal('');
 
   private readonly productService = inject(ProductService);
+  private readonly shoppingListService = inject(ShoppingListService);
 
   readonly categories = signal<string[]>([]);
   readonly products = signal<Product[]>([]);
@@ -108,5 +110,12 @@ export class GroceryItemsPage implements OnInit{
     }
 
     this.loadProducts(this.page() + 1);
+  }
+
+  addToList(productId: number): void {
+    this.shoppingListService.addItem({ productId, quantity: 1 }).subscribe({
+      next: () => console.log('Item added to shopping list'),
+      error: (err) => console.error('Failed to add item', err)
+    });
   }
 }

@@ -69,9 +69,8 @@
           <button type="button" (click)="increaseQuantity()">+</button>
         </div>
 
-        <button type="button" class="add-btn">
-          Add to List · $
-          {{ totalPrice() }}
+        <button type="button" class="add-btn" (click)="addToList()">
+          Add to List
         </button>
       </div>
     </div>

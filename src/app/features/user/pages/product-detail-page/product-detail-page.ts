@@ -3,6 +3,7 @@ import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterLink, ActivatedRoute} from '@angular/router';
 import { ProductService } from '../../../../core/services/product.service';
+import { ShoppingListService } from '../../../../core/services/shopping-list.service';
 import { Product } from '../../../../core/models/product.model';
 import { finalize } from 'rxjs';
 
@@ -15,6 +16,7 @@ import { finalize } from 'rxjs';
 export class ProductDetailPage implements OnInit{
   private readonly route = inject(ActivatedRoute);
   private readonly productService = inject(ProductService);
+  private readonly shoppingListService = inject(ShoppingListService);
 
   readonly product = signal<Product | null>(null);
   readonly loading = signal(false);
@@ -62,5 +64,17 @@ export class ProductDetailPage implements OnInit{
 
   increaseQuantity(): void {
     this.quantity.update((value) => value + 1);
+  }
+
+  addToList(): void {
+    const current = this.product();
+    if (!current) return;
+
+    this.shoppingListService
+      .addItem({ productId: current.id, quantity: this.quantity() })
+      .subscribe({
+        next: () => console.log('Added to shopping list'),
+        error: (err) => console.error('Failed to add item', err)
+      });
   }
 }
