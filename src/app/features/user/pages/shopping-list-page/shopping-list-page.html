@@ -1,3 +1,70 @@
-<div class="page-placeholder">
-  <h1>Shopping List Page</h1>
+<div class="shopping-list-page">
+  <div class="page-header">
+    <div>
+      <h1>Shopping List</h1>
+      <p>Review and manage your items</p>
+    </div>
+
+    @if (items().length) {
+    <button mat-stroked-button class="clear-btn" (click)="clearAll()">
+      Clear All
+    </button>
+    }
+  </div>
+
+  @if (loading()) {
+  <div class="state-message">Loading shopping list...</div>
+  } @else if (!items().length) {
+  <div class="state-message">Your shopping list is empty.</div>
+  } @else {
+  <div class="list-layout">
+    <div class="list-items">
+      @for (item of items(); track item.id) {
+      <mat-card class="list-item">
+        <div class="item-image">
+          <img [src]="item.imageUrl" [alt]="item.productName" />
+        </div>
+
+        <div class="item-info">
+          <div class="item-name">{{ item.productName }}</div>
+          <div class="item-meta">
+            {{ item.category }} · ${{ item.estimatedPrice }} / Ea
+          </div>
+        </div>
+
+        <div class="quantity-box">
+          <button type="button" (click)="updateQuantity(item.id, item.quantity - 1)">−</button>
+          <span>{{ item.quantity }}</span>
+          <button type="button" (click)="updateQuantity(item.id, item.quantity + 1)">+</button>
+        </div>
+
+        <div class="item-total">${{ item.totalPrice }}</div>
+      </mat-card>
+      }
+    </div>
+
+    <mat-card class="summary-card">
+      <h3>Summary</h3>
+
+      <div class="summary-row">
+        <span>Total Items</span>
+        <span class="summary-value">{{ totalItems() }}</span>
+      </div>
+
+      <div class="summary-row">
+        <span>Subtotal</span>
+        <span>${{ subtotal() }}</span>
+      </div>
+
+      <div class="summary-total">
+        <span>Total Estimated</span>
+        <span class="total-price">${{ subtotal() }}</span>
+      </div>
+
+      <p class="summary-note">Prices are estimates and may vary by store.</p>
+
+      <button mat-flat-button class="find-btn">Find in Store</button>
+    </mat-card>
+  </div>
+  }
 </div>
