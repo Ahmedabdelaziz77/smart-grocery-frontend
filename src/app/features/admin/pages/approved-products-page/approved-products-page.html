@@ -1,3 +1,77 @@
-<div class="page-placeholder">
-  <h1>Approved Products Page</h1>
+<div class="approved-page">
+  <div class="page-header">
+    <h1>Approved Products</h1>
+    <p>Manage your catalog of available products</p>
+  </div>
+
+  <div class="filters">
+    <div class="filters__left">
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-label>Search</mat-label>
+        <input matInput [value]="searchTerm()" (input)="searchTerm.set($any($event.target).value)" (keyup.enter)="onSearch()" placeholder="Search products..." />
+      </mat-form-field>
+
+      <button mat-stroked-button type="button" class="search-btn" (click)="onSearch()">
+        Search
+      </button>
+    </div>
+
+    <mat-form-field appearance="outline" class="category-field">
+      <mat-label>Category</mat-label>
+      <mat-select [value]="selectedCategory()" (valueChange)="onCategoryChange($event)">
+        <mat-option value="">All Categories</mat-option>
+        @for (category of categories(); track category) {
+        <mat-option [value]="category">
+          {{ category }}
+        </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  @if (loading()) {
+  <div class="state-message">Loading products...</div>
+  } @else if (!products().length) {
+  <div class="state-message">No approved products found.</div>
+  } @else {
+  <div class="product-grid">
+    @for (product of products(); track product.id) {
+    <mat-card class="product-card">
+      <div class="product-card__image-wrap">
+        <img class="product-card__image" [src]="product.imageUrl" [alt]="product.name" />
+        <div class="price-badge">${{ product.estimatedPrice }}</div>
+      </div>
+
+      <div class="product-card__content">
+        <h3 class="product-name">{{ product.name }}</h3>
+
+        <div class="product-meta">
+          <span class="category-pill">{{ product.category }}</span>
+          <span class="kcal">{{ product.calories }} kcal</span>
+        </div>
+
+        <p class="product-description">{{ product.description }}</p>
+
+        <div class="product-card__actions">
+          <button mat-flat-button type="button" class="remove-btn" (click)="removeProduct(product.id)">
+            Remove
+          </button>
+        </div>
+      </div>
+    </mat-card>
+    }
+  </div>
+  }
+
+  <div class="pagination">
+    <button mat-stroked-button type="button" (click)="goToPreviousPage()" [disabled]="isFirstPage()">
+      Previous
+    </button>
+
+    <span>Page {{ page() + 1 }} of {{ totalPages() || 1 }}</span>
+
+    <button mat-stroked-button type="button" (click)="goToNextPage()" [disabled]="isLastPage()">
+      Next
+    </button>
+  </div>
 </div>
