@@ -1,3 +1,71 @@
-<div class="page-placeholder">
-  <h1>Admin Dashboard Page</h1>
+<div class="dashboard-page">
+  <div class="page-header">
+    <h1>Dashboard</h1>
+    <p>Overview of your grocery platform</p>
+  </div>
+
+  @if (loading()) {
+  <div class="state-message">Loading dashboard...</div>
+  } @else if (!dashboard()) {
+  <div class="state-message">Failed to load dashboard data.</div>
+  } @else {
+  <div class="stat-cards">
+    <mat-card class="stat-card">
+      <div class="stat-value">{{ dashboard()!.totalProducts }}</div>
+      <div class="stat-label">Total Products</div>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <div class="stat-value">{{ dashboard()!.totalCategories }}</div>
+      <div class="stat-label">Categories</div>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <div class="stat-value">{{ dashboard()!.totalUsers }}</div>
+      <div class="stat-label">Users</div>
+    </mat-card>
+  </div>
+
+  <div class="dashboard-grid">
+    <mat-card class="section-card">
+      <h3>Recently Approved</h3>
+
+      @if (!dashboard()!.recentlyApproved.length) {
+      <p class="empty-text">No recently approved products.</p>
+      } @else {
+      <div class="recent-list">
+        @for (product of dashboard()!.recentlyApproved; track product.id) {
+        <div class="recent-item">
+          <div class="recent-image">
+            <img [src]="product.imageUrl" [alt]="product.name" />
+          </div>
+          <div class="recent-info">
+            <div class="recent-name">{{ product.name }}</div>
+            <div class="recent-category">{{ product.category }}</div>
+          </div>
+          <div class="recent-price">${{ product.estimatedPrice }}</div>
+        </div>
+        }
+      </div>
+      }
+    </mat-card>
+
+    <mat-card class="section-card">
+      <h3>Products by Category</h3>
+
+      @if (!dashboard()!.productsByCategory.length) {
+      <p class="empty-text">No category data available.</p>
+      } @else {
+      <div class="category-list">
+        @for (item of dashboard()!.productsByCategory; track item.category) {
+        <div class="category-row">
+          <span class="category-name">{{ item.category }}</span>
+          <span class="category-count">{{ item.count }}</span>
+        </div>
+        }
+      </div>
+      }
+    </mat-card>
+  </div>
+  }
 </div>
