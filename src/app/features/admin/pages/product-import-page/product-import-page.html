@@ -1,7 +1,15 @@
 <div class="import-page">
   <div class="page-header">
-    <h1>Product Import</h1>
-    <p>Search and import products from Open Food Facts</p>
+    <div>
+      <h1>Product Import</h1>
+      <p>Search and import products from Open Food Facts</p>
+    </div>
+
+    @if (selectedCount() > 0) {
+    <button mat-flat-button class="bulk-btn" (click)="openBulkImport()">
+      Import Selected ({{ selectedCount() }})
+    </button>
+    }
   </div>
 
   <div class="search-bar">
@@ -17,12 +25,16 @@
 
   @if (loading()) {
   <div class="state-message">Searching products...</div>
-  } @else if (!results().length) {
+  } @else if (!allResults().length) {
   <div class="state-message">Search for products to import them into your catalog.</div>
   } @else {
   <div class="result-grid">
-    @for (product of results(); track product.externalId || product.id) {
-    <mat-card class="result-card">
+    @for (product of pagedResults(); track product.externalId || product.id) {
+    <mat-card class="result-card" [class.result-card--selected]="isSelected(product)">
+      <div class="result-card__top">
+        <mat-checkbox [checked]="isSelected(product)" (change)="toggleSelection(product)"></mat-checkbox>
+      </div>
+
       <div class="result-card__image-wrap">
         <img class="result-card__image" [src]="product.imageUrl" [alt]="product.name" />
       </div>
@@ -36,15 +48,25 @@
         </div>
 
         <div class="result-card__actions">
-          <button mat-flat-button type="button" class="import-btn"
-                  (click)="importProduct(product)"
-                  [disabled]="isImporting(product)">
-            {{ isImporting(product) ? 'Importing...' : 'Import' }}
+          <button mat-flat-button type="button" class="import-btn" (click)="openSingleImport(product)">
+            Import
           </button>
         </div>
       </div>
     </mat-card>
     }
+  </div>
+
+  <div class="pagination">
+    <button mat-stroked-button type="button" (click)="goToPreviousPage()" [disabled]="isFirstPage()">
+      Previous
+    </button>
+
+    <span>Page {{ page() + 1 }} of {{ totalPages() || 1 }}</span>
+
+    <button mat-stroked-button type="button" (click)="goToNextPage()" [disabled]="isLastPage()">
+      Next
+    </button>
   </div>
   }
 </div>

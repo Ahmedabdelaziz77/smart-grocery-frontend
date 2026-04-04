@@ -4,6 +4,9 @@
 }
 
 .page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
   margin-bottom: 20px;
 
   h1 {
@@ -18,6 +21,13 @@
     font-size: 16px;
     color: #6b7280;
   }
+}
+
+.bulk-btn {
+  background: #22c55e !important;
+  color: #fff !important;
+  font-weight: 600;
+  border-radius: 10px;
 }
 
 .search-bar {
@@ -61,10 +71,19 @@
   background: #fff;
   display: flex;
   flex-direction: column;
+  transition: border-color 0.2s ease;
+}
+
+.result-card--selected {
+  border-color: #22c55e;
+}
+
+.result-card__top {
+  padding: 10px 12px 0;
 }
 
 .result-card__image-wrap {
-  height: 178px;
+  height: 160px;
   background: #f3f4f6;
   flex-shrink: 0;
 }
@@ -115,6 +134,14 @@
   background: #22c55e !important;
   color: #fff !important;
   font-weight: 600;
+}
+
+.pagination {
+  margin-top: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
 }
 
 .state-message {

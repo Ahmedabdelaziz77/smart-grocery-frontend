@@ -28,7 +28,7 @@ export class AdminService {
     return this.http.get<DashboardData>(`${this.api}/dashboard`);
   }
 
-  searchExternal(query: string, page = 1, size = 10): Observable<any> {
+  searchExternal(query: string, page = 1, size = 50): Observable<any> {
     const params = new HttpParams()
       .set('query', query)
       .set('page', page)
@@ -45,8 +45,12 @@ export class AdminService {
     return this.http.get<PaginatedResponse<Product>>(`${this.api}/approved`, { params });
   }
 
-  importProduct(product: any): Observable<Product> {
-    return this.http.post<Product>(`${this.api}/import`, product);
+  importProduct(externalId: string, estimatedPrice: number): Observable<Product> {
+    return this.http.post<Product>(`${this.api}/import`, { externalId, estimatedPrice });
+  }
+
+  bulkImport(products: { externalId: string; estimatedPrice: number }[]): Observable<any> {
+    return this.http.post(`${this.api}/import/bulk`, { products });
   }
 
   deleteProduct(id: number): Observable<void> {
