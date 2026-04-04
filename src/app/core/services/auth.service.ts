@@ -16,19 +16,26 @@ import { TokenStorageService } from './token-storage.service';
   providedIn: 'root'
 })
 export class AuthService {
-  private readonly http = inject(HttpClient);
-  private readonly storage = inject(TokenStorageService);
   private readonly authApi = `${environment.apiUrl}/auth`;
 
+  private readonly http = inject(HttpClient);
+  private readonly storage = inject(TokenStorageService);
+
   private accessToken: string | null = null;
+
+
   private refreshing = false;
   private refreshSubject = new BehaviorSubject<string | null>(null);
+
+  private isAuthStarted = false;
+  private readonly startedSignal = signal(false);
 
   private readonly currentUserSignal = signal<AuthUser | null>(this.storage.getUser());
 
   readonly currentUser = computed(() => this.currentUserSignal());
   readonly isAuthenticated = computed(() => !!this.currentUserSignal());
   readonly role = computed<UserRole | null>(() => this.currentUserSignal()?.role ?? null);
+  readonly initialized = computed(() => this.startedSignal());
 
   login(body: LoginRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.authApi}/login`, body).pipe(
@@ -53,7 +60,7 @@ export class AuthService {
     const refreshToken = this.storage.getRefreshToken();
 
     if (!refreshToken) {
-      return throwError(() => new Error('No refresh token available'));
+      return throwError(() => new Error('No refresh token available!!'));
     }
 
     this.refreshing = true;
@@ -69,22 +76,43 @@ export class AuthService {
           this.refreshing = false;
         }),
         catchError((error) => {
-          this.logout(true).subscribe({ error: () => {} });
+           this.clearSession();
           return throwError(() => error);
         })
       );
   }
 
-  logout(fromInterceptor = false): Observable<unknown> {
-    const request$ = this.http.post(`${this.authApi}/logout`, {});
+  startAuth(): void {
+    if (this.isAuthStarted) {
+      return;
+    }
 
-    return request$.pipe(
+    this.isAuthStarted = true;
+
+    const refreshToken = this.storage.getRefreshToken();
+
+    if (!refreshToken) {
+      this.clearSession();
+      this.startedSignal.set(true);
+      return;
+    }
+
+    this.refreshToken().subscribe({
+      next: () => {
+        this.startedSignal.set(true);
+      },
+      error: () => {
+        this.clearSession();
+        this.startedSignal.set(true);
+      }
+    });
+  }
+
+  logout(): Observable<unknown> {
+    return this.http.post(`${this.authApi}/logout`, {}).pipe(
       tap(() => this.clearSession()),
       catchError((error) => {
         this.clearSession();
-        if (fromInterceptor) {
-          return throwError(() => error);
-        }
         return throwError(() => error);
       })
     );
