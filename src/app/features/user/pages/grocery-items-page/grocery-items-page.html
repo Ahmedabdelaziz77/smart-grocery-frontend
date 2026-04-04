@@ -1,3 +1,72 @@
-<div class="page-placeholder">
-  <h1>Grocery Items Page</h1>
+<div class="grocery-page">
+  <div class="page-header">
+    <h1>Grocery Items</h1>
+    <p>Browse available products and build your shopping list</p>
+  </div>
+
+  <div class="filters">
+    <div class="filters__left">
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-label>Search</mat-label>
+        <input matInput [value]="searchTerm()" (input)="searchTerm.set($any($event.target).value)" placeholder="Search groceries..." />
+      </mat-form-field>
+      <button mat-stroked-button type="button" class="search-btn">
+        Search
+      </button>
+    </div>
+
+    <mat-form-field appearance="outline" class="category-field">
+      <mat-label>Category</mat-label>
+      <mat-select [value]="selectedCategory()" (valueChange)="selectedCategory.set($event)">
+        <mat-option value="">All Categories</mat-option>
+        @for (category of categories; track category) {
+        <mat-option [value]="category">
+          {{ category }}
+        </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div class="product-grid">
+    @for (product of products; track product.id) {
+    <mat-card class="product-card">
+      <div class="product-card__image-wrap">
+        <img class="product-card__image" [src]="product.imageUrl" [alt]="product.name" />
+        <div class="price-badge">$
+          {{ product.estimatedPrice }}
+        </div>
+      </div>
+
+      <div class="product-card__content">
+        <h3 class="product-name">
+          {{ product.name }}
+        </h3>
+
+        <div class="product-meta">
+          <span class="category-pill">
+            {{ product.category }}</span>
+          <span class="kcal">
+            {{ product.calories }} kcal</span>
+        </div>
+
+        <div class="product-card__actions">
+          <a mat-stroked-button [routerLink]="['/groceries', product.id]">
+            Details
+          </a>
+
+          <button mat-flat-button type="button" class="add-btn">
+            Add
+          </button>
+        </div>
+      </div>
+    </mat-card>
+    }
+  </div>
+
+  <div class="pagination-placeholder">
+    <button mat-stroked-button type="button">Previous</button>
+    <span>Page 1 of 1</span>
+    <button mat-stroked-button type="button">Next</button>
+  </div>
 </div>
