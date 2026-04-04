@@ -28,7 +28,7 @@ export class AdminService {
     return this.http.get<DashboardData>(`${this.api}/dashboard`);
   }
 
-  searchExternal(query: string, page = 1, size = 7): Observable<any> {
+  searchExternal(query: string, page = 1, size = 10): Observable<any> {
     const params = new HttpParams()
       .set('query', query)
       .set('page', page)
