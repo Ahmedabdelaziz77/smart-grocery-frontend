@@ -1,4 +1,4 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -6,6 +6,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { AuthService } from '../../../../core/services/auth.service';
+import { Router } from '@angular/router';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-auth-page',
@@ -23,14 +26,14 @@ import { MatIconModule } from '@angular/material/icon';
 })
 export class AuthPage {
   private readonly fb = new FormBuilder();
+  private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
+
 
   readonly isSignupMode = signal(false);
-  readonly pageTitle = computed(() =>
-    this.isSignupMode() ? 'Create your account' : 'Welcome back'
-  );
-  readonly submitLabel = computed(() =>
-    this.isSignupMode() ? 'Sign Up' : 'Login'
-  );
+  readonly isSubmitting = signal(false);
+  readonly errorMessage = signal('');
+
 
   readonly form = this.fb.group({
     fullName: [''],
@@ -40,6 +43,7 @@ export class AuthPage {
 
   toggleMode(): void {
     this.isSignupMode.update((value) => !value);
+    this.errorMessage.set('');
 
     const fullNameControl = this.form.get('fullName');
 
@@ -55,9 +59,58 @@ export class AuthPage {
 
   onSubmit(): void {
     this.form.markAllAsTouched();
+    this.errorMessage.set('');
 
     if (this.form.invalid) {
       return;
     }
+
+    this.isSubmitting.set(true);
+
+    if (this.isSignupMode()) {
+      this.authService
+        .signup({
+          fullName: this.form.get('fullName')?.value?.trim() ?? '',
+          email: this.form.get('email')?.value?.trim() ?? '',
+          password: this.form.get('password')?.value ?? ''
+        })
+        .pipe(finalize(() => this.isSubmitting.set(false)))
+        .subscribe({
+          next: () => this.redirectAfterAuth(),
+          error: (error) => {
+            this.errorMessage.set(
+              error?.error?.message || 'Signup failed. Please try again.'
+            );
+          }
+        });
+
+      return;
+    }
+
+    this.authService
+      .login({
+        email: this.form.get('email')?.value?.trim() ?? '',
+        password: this.form.get('password')?.value ?? ''
+      })
+      .pipe(finalize(() => this.isSubmitting.set(false)))
+      .subscribe({
+        next: () => this.redirectAfterAuth(),
+        error: (error) => {
+          this.errorMessage.set(
+            error?.error?.message || 'Login failed. Please check your credentials!!'
+          );
+        }
+      });
+  }
+
+  private redirectAfterAuth(): void {
+    const role = this.authService.role();
+
+    if (role === 'ADMIN') {
+      this.router.navigate(['/admin/dashboard']);
+      return;
+    }
+
+    this.router.navigate(['/groceries']);
   }
 }

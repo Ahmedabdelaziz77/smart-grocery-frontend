@@ -17,15 +17,14 @@
       @if (isSignupMode()) {
       <div class="field-block">
         <label class="field-label">Full Name</label>
-        <mat-form-field appearance="outline">
-          <input matInput formControlName="fullName" placeholder="John Doe" />
-          @if (form.get('fullName')?.hasError('required') && form.get('fullName')?.touched) {
-          <mat-error>Full name is required</mat-error>
-          }
-          @if (form.get('fullName')?.hasError('minlength') && form.get('fullName')?.touched) {
-          <mat-error>Full name must be at least 3 characters</mat-error>
-          }
-        </mat-form-field>
+        <input appearance="outline" />
+        <input matInput formControlName="fullName" placeholder="John Doe" />
+        @if (form.get('fullName')?.hasError('required') && form.get('fullName')?.touched) {
+        <mat-error>Full name is required</mat-error>
+        }
+        @if (form.get('fullName')?.hasError('minlength') && form.get('fullName')?.touched) {
+        <mat-error>Full name must be at least 3 characters</mat-error>
+        }
       </div>
       }
 
@@ -55,8 +54,14 @@
         </mat-form-field>
       </div>
 
-      <button mat-flat-button type="submit" class="submit-btn">
-        {{ isSignupMode() ? 'Sign up' : 'Sign in' }}
+      @if (errorMessage()) {
+      <div class="auth-error">
+        {{ errorMessage() }}
+      </div>
+      }
+
+      <button mat-flat-button type="submit" class="submit-btn" [disabled]="isSubmitting()">
+        {{ isSubmitting() ? 'Please wait...' : (isSignupMode() ? 'Sign up' : 'Sign in') }}
       </button>
     </form>
 
@@ -65,7 +70,7 @@
         {{ isSignupMode() ? 'Already have an account?' : "Don't have an account?" }}
       </span>
 
-      <button mat-button type="button" class="switch-btn" (click)="toggleMode()">
+      <button mat-button type="button" class="switch-btn" (click)="toggleMode()" [disabled]="isSubmitting()">
         {{ isSignupMode() ? 'Sign in' : 'Sign up' }}
       </button>
     </div>
