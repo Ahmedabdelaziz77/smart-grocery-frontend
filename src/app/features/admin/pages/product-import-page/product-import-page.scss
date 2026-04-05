@@ -160,7 +160,6 @@
   max-width: 360px;
 }
 
-// ── Result grid ──
 .result-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -174,10 +173,11 @@
   background: #fff;
   display: flex;
   flex-direction: column;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 
   &:hover {
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
   }
 }
 
@@ -186,34 +186,70 @@
   box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.15);
 }
 
-.result-card__top {
-  padding: 10px 12px 0;
+.result-card--imported {
+  opacity: 0.55;
+  filter: grayscale(0.3);
+
+  &:hover {
+    transform: none;
+    box-shadow: none;
+  }
 }
 
 .result-card__image-wrap {
-  height: 160px;
-  background: #f1f5f9;
+  position: relative;
+  height: 170px;
+  background: #f8fafc;
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
 }
 
 .result-card__image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
   display: block;
+  border-radius: 6px;
+}
+
+.result-card__overlay {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+}
+
+.imported-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(4px);
+  color: #16a34a;
+  font-size: 12px;
+  font-weight: 600;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.imported-badge__icon {
+  font-size: 15px;
 }
 
 .result-card__content {
-  padding: 16px;
+  padding: 14px 16px 16px;
   display: flex;
   flex-direction: column;
   flex: 1;
 }
 
 .result-name {
-  margin: 0 0 10px;
-  font-size: 15px;
-  line-height: 1.3;
+  margin: 0 0 8px;
+  font-size: 14px;
+  line-height: 1.4;
   font-weight: 600;
   color: #0f172a;
   display: -webkit-box;
@@ -226,18 +262,55 @@
 .result-meta {
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 6px;
   margin-bottom: 14px;
-  font-size: 13px;
-  color: #64748b;
 }
 
 .result-brand {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
   font-weight: 500;
+  color: #64748b;
+}
+
+.result-brand__icon {
+  font-size: 14px;
+  color: #94a3b8;
+}
+
+.result-category-pill {
+  display: inline-flex;
+  align-self: flex-start;
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: #f0fdf4;
+  color: #16a34a;
+  font-size: 11px;
+  font-weight: 600;
 }
 
 .result-card__actions {
   margin-top: auto;
+}
+
+.imported-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  width: 100%;
+  padding: 8px 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: #94a3b8;
+  border: 1.5px dashed #e2e8f0;
+  border-radius: 8px;
+}
+
+.imported-label__icon {
+  font-size: 15px;
 }
 
 .import-btn {

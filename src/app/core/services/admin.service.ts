@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { PaginatedResponse, Product } from '../models/product.model';
 
@@ -55,6 +56,24 @@ export class AdminService {
     }
 
     return this.http.get<PaginatedResponse<Product>>(`${this.api}/approved`, { params });
+  }
+
+  getApprovedExternalIds(): Observable<Set<string>> {
+    const params = new HttpParams()
+      .set('page', 0)
+      .set('size', 1000)
+      .set('name', '')
+      .set('category', '');
+
+    return this.http.get<PaginatedResponse<Product>>(`${this.api}/approved`, { params }).pipe(
+      map((response) => {
+        const ids = new Set<string>();
+        response.content.forEach((p) => {
+          if (p.externalId) ids.add(p.externalId);
+        });
+        return ids;
+      })
+    );
   }
 
   importProduct(externalId: string, estimatedPrice: number): Observable<Product> {

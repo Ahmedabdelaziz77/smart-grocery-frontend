@@ -6,7 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { AdminService } from '../../../../core/services/admin.service';
 import { ImportDialog, ImportDialogResult } from './import-dialog';
 import { ToastService } from '../../../../shared/services/toast.service';
-import { finalize } from 'rxjs';
+import { finalize, forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-product-import-page',
@@ -28,6 +28,7 @@ export class ProductImportPage {
   loading = signal(false);
   hasSearched = signal(false);
   selectedIds = signal<Set<string>>(new Set());
+  importedIds = signal<Set<string>>(new Set());
 
   readonly popularSearches = [
     'Chicken', 'Rice', 'Pasta', 'Eggs', 'Milk',
@@ -62,12 +63,15 @@ export class ProductImportPage {
     this.page.set(0);
     this.selectedIds.set(new Set());
 
-    this.adminService
-      .searchExternal(query)
+    forkJoin({
+      results: this.adminService.searchExternal(query),
+      importedIds: this.adminService.getApprovedExternalIds()
+    })
       .pipe(finalize(() => this.loading.set(false)))
       .subscribe({
-        next: (data) => {
-          this.allResults.set(data.content ?? data ?? []);
+        next: ({ results, importedIds }) => {
+          this.allResults.set(results.content ?? results ?? []);
+          this.importedIds.set(importedIds);
           this.hasSearched.set(true);
         },
         error: (err) => {
@@ -77,6 +81,11 @@ export class ProductImportPage {
           this.hasSearched.set(true);
         }
       });
+  }
+
+  isImported(product: any): boolean {
+    const id = product.externalId || product.id;
+    return this.importedIds().has(id);
   }
 
   isSelected(product: any): boolean {
@@ -113,7 +122,12 @@ export class ProductImportPage {
 
       const item = result.products[0];
       this.adminService.importProduct(item.externalId, item.estimatedPrice).subscribe({
-        next: () => this.toast.success('product imported successfully!'),
+        next: () => {
+          this.toast.success('product imported successfully!');
+          const updated = new Set(this.importedIds());
+          updated.add(item.externalId);
+          this.importedIds.set(updated);
+        },
         error: (err) => this.toast.handleError(err, 'failed to import product!')
       });
     });
@@ -144,6 +158,9 @@ export class ProductImportPage {
         next: () => {
           this.toast.success(`${result.products.length} products imported successfully!`);
           this.selectedIds.set(new Set());
+          const updated = new Set(this.importedIds());
+          result.products.forEach((p) => updated.add(p.externalId));
+          this.importedIds.set(updated);
         },
         error: (err) => this.toast.handleError(err, 'Bulk import failed')
       });

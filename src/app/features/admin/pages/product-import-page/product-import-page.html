@@ -62,28 +62,50 @@
   <!-- Results grid -->
   <div class="result-grid">
     @for (product of pagedResults(); track product.externalId || product.id) {
-    <div class="result-card" [class.result-card--selected]="isSelected(product)">
-      <div class="result-card__top">
-        <mat-checkbox [checked]="isSelected(product)" (change)="toggleSelection(product)"></mat-checkbox>
-      </div>
+    <div class="result-card"
+      [class.result-card--selected]="isSelected(product)"
+      [class.result-card--imported]="isImported(product)">
 
       <div class="result-card__image-wrap">
         <img class="result-card__image" [src]="product.imageUrl" [alt]="product.name" />
+
+        <div class="result-card__overlay">
+          @if (isImported(product)) {
+          <span class="imported-badge">
+            <span class="material-icons imported-badge__icon">check_circle</span>
+            Imported
+          </span>
+          } @else {
+          <mat-checkbox [checked]="isSelected(product)" (change)="toggleSelection(product)"></mat-checkbox>
+          }
+        </div>
       </div>
 
       <div class="result-card__content">
         <h3 class="result-name">{{ product.name }}</h3>
 
         <div class="result-meta">
-          <span class="result-brand">{{ product.brand || 'Unknown brand' }}</span>
-          <span class="result-category">{{ product.category || 'Uncategorized' }}</span>
+          @if (product.brand) {
+          <span class="result-brand">
+            <span class="material-icons result-brand__icon">storefront</span>
+            {{ product.brand }}
+          </span>
+          }
+          <span class="result-category-pill">{{ product.category || 'Uncategorized' }}</span>
         </div>
 
         <div class="result-card__actions">
+          @if (isImported(product)) {
+          <div class="imported-label">
+            <span class="material-icons imported-label__icon">inventory_2</span>
+            Already in catalog
+          </div>
+          } @else {
           <button class="import-btn" type="button" (click)="openSingleImport(product)">
             <span class="material-icons import-btn__icon">file_download</span>
             Import
           </button>
+          }
         </div>
       </div>
     </div>
