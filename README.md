@@ -1,59 +1,94 @@
-# SmartGroceryFrontend
+# Smart Grocery — Frontend
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.0.4.
+An **Angular** single-page application for the Smart Grocery platform — a smart grocery list with admin product management, external food database integration, and personal shopping lists.
 
-## Development server
+> **Backend Repository:** [smartGrocery](https://github.com/Ahmedabdelaziz77/smart-grocery)
 
-To start a local development server, run:
+---
+
+## Tech Stack
+
+| Technology | Version |
+|---|---|
+| Angular | 20 |
+| TypeScript | 5.8 |
+| Angular Material | 20 |
+| Angular CDK | 20 |
+| RxJS | 7.8 |
+| SCSS | Styling |
+
+---
+
+## Features
+
+### Authentication
+- Login & Signup with form validation
+- JWT token management with automatic refresh on 401 responses
+- Role-based route guards (`ADMIN` / `USER`)
+- Persistent sessions via session storage
+
+### Admin Panel
+- **Dashboard** — overview with total products, categories, users, recent imports, and category distribution
+- **Product Import** — search the Open Food Facts database, preview results, set estimated prices, and import (single or bulk)
+- **Approved Products** — browse, search, filter, and delete approved products with pagination
+
+### User Panel
+- **Grocery Browsing** — paginated list of approved products with search & category filtering
+- **Product Details** — view full nutritional info (calories, protein, carbs, fat), brand, price, and image
+- **Shopping List** — add products, update quantities, remove items, or clear the entire list with live total price calculation
+
+### Architecture
+- Feature-based module structure (`auth`, `admin`, `user`)
+- Lazy-loaded routes for performance
+- HTTP interceptor for automatic token attachment & refresh
+- Angular Signals for reactive state management
+- Standalone components throughout
+
+---
+
+## Getting Started
+
+### Prerequisites
+
+- **Node.js** 18+ and **npm**
+- Backend API running on `http://localhost:8080` (see [backend repo](https://github.com/Ahmedabdelaziz77/smart-grocery))
+
+### 1. Install dependencies
+
+```bash
+npm install
+```
+
+### 2. Run the development server
 
 ```bash
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+The application will be available at: **http://localhost:4200**
 
-## Code scaffolding
+> Make sure the backend API is running on port `8080` before starting the frontend.
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+---
 
-```bash
-ng generate component component-name
+## Project Structure
+
+```
+src/app/
+├── core/                    # Shared core logic
+│   ├── guards/              # Auth, guest, and role guards
+│   ├── interceptors/        # JWT auth interceptor
+│   ├── models/              # TypeScript interfaces
+│   └── services/            # API services (auth, product, admin, shopping-list)
+├── features/
+│   ├── auth/                # Login & signup pages
+│   ├── admin/               # Dashboard, product import, approved products
+│   └── user/                # Grocery items, product detail, shopping list
+├── layout/                  # Shell component (navbar, sidebar)
+└── shared/                  # Shared/reusable components
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+---
 
-```bash
-ng generate --help
-```
+## Video Demo
 
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
