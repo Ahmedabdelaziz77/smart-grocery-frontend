@@ -1,34 +1,66 @@
 <div class="dashboard-page">
   <div class="page-header">
     <h1>Dashboard</h1>
-    <p>Overview of your grocery platform</p>
+    <p>Platform overview and recent activity</p>
   </div>
 
   @if (loading()) {
-  <div class="state-message">Loading dashboard...</div>
+  <div class="state-message">
+    <span class="material-icons spin-icon">sync</span>
+    Loading dashboard...
+  </div>
   } @else if (!dashboard()) {
   <div class="state-message">Failed to load dashboard data.</div>
   } @else {
+
+  <!-- Stat cards -->
   <div class="stat-cards">
-    <mat-card class="stat-card">
-      <div class="stat-value">{{ dashboard()!.totalProducts }}</div>
-      <div class="stat-label">Total Products</div>
-    </mat-card>
+    <div class="stat-card">
+      <div class="stat-card__header">
+        <span class="stat-card__label">Total Products</span>
+        <div class="stat-card__icon stat-card__icon--green">
+          <span class="material-icons">inventory_2</span>
+        </div>
+      </div>
+      <div class="stat-card__value">{{ dashboard()!.totalProducts }}</div>
+      <div class="stat-card__hint">Approved &amp; available</div>
+    </div>
 
-    <mat-card class="stat-card">
-      <div class="stat-value">{{ dashboard()!.totalCategories }}</div>
-      <div class="stat-label">Categories</div>
-    </mat-card>
+    <div class="stat-card">
+      <div class="stat-card__header">
+        <span class="stat-card__label">Categories</span>
+        <div class="stat-card__icon stat-card__icon--blue">
+          <span class="material-icons">category</span>
+        </div>
+      </div>
+      <div class="stat-card__value">{{ dashboard()!.totalCategories }}</div>
+      <div class="stat-card__hint">Product categories</div>
+    </div>
 
-    <mat-card class="stat-card">
-      <div class="stat-value">{{ dashboard()!.totalUsers }}</div>
-      <div class="stat-label">Users</div>
-    </mat-card>
+    <div class="stat-card">
+      <div class="stat-card__header">
+        <span class="stat-card__label">Users</span>
+        <div class="stat-card__icon stat-card__icon--purple">
+          <span class="material-icons">group</span>
+        </div>
+      </div>
+      <div class="stat-card__value">{{ dashboard()!.totalUsers }}</div>
+      <div class="stat-card__hint">Registered accounts</div>
+    </div>
   </div>
 
+  <!-- Bottom grid -->
   <div class="dashboard-grid">
-    <mat-card class="section-card">
-      <h3>Recently Approved</h3>
+
+    <!-- Recently approved -->
+    <div class="section-card">
+      <div class="section-card__header">
+        <h3>Recently Approved</h3>
+        <a class="view-all-link" routerLink="/admin/products">
+          View all
+          <span class="material-icons view-all-link__arrow">arrow_forward</span>
+        </a>
+      </div>
 
       @if (!dashboard()!.recentlyApproved.length) {
       <p class="empty-text">No recently approved products.</p>
@@ -48,10 +80,13 @@
         }
       </div>
       }
-    </mat-card>
+    </div>
 
-    <mat-card class="section-card">
-      <h3>Products by Category</h3>
+    <!-- Products by category -->
+    <div class="section-card">
+      <div class="section-card__header">
+        <h3>Products by Category</h3>
+      </div>
 
       @if (!dashboard()!.productsByCategory.length) {
       <p class="empty-text">No category data available.</p>
@@ -59,13 +94,17 @@
       <div class="category-list">
         @for (item of dashboard()!.productsByCategory; track item.category) {
         <div class="category-row">
-          <span class="category-name">{{ item.category }}</span>
-          <span class="category-count">{{ item.count }}</span>
+          <div class="category-row__left">
+            <div class="category-dot"></div>
+            <span class="category-name">{{ item.category }}</span>
+          </div>
+          <span class="category-count">{{ item.count }} {{ item.count === 1 ? 'item' : 'items' }}</span>
         </div>
         }
       </div>
       }
-    </mat-card>
+    </div>
+
   </div>
   }
 </div>

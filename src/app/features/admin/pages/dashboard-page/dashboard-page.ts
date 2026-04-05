@@ -1,13 +1,13 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatCardModule } from '@angular/material/card';
+import { RouterLink } from '@angular/router';
 import { AdminService, DashboardData } from '../../../../core/services/admin.service';
 import { ToastService } from '../../../../shared/services/toast.service';
 import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard-page',
-  imports: [CommonModule, MatCardModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './dashboard-page.html',
   styleUrl: './dashboard-page.scss',
 })
