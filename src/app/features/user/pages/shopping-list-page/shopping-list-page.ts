@@ -5,6 +5,7 @@ import { MatCardModule } from '@angular/material/card';
 import { RouterLink } from '@angular/router';
 import { ShoppingListService } from '../../../../core/services/shopping-list.service';
 import { ShoppingList } from '../../../../core/models/shopping-list.model';
+import { ToastService } from '../../../../shared/services/toast.service';
 import { finalize } from 'rxjs';
 
 @Component({
@@ -15,6 +16,7 @@ import { finalize } from 'rxjs';
 })
 export class ShoppingListPage implements OnInit {
   private readonly shoppingListService = inject(ShoppingListService);
+  private readonly toast = inject(ToastService);
 
   readonly shoppingList = signal<ShoppingList | null>(null);
   readonly loading = signal(false);
@@ -37,6 +39,7 @@ export class ShoppingListPage implements OnInit {
         next: (list) => this.shoppingList.set(list),
         error: (err) => {
           console.error('Failed to load shopping list!!', err);
+          this.toast.handleError(err, 'Failed to load shopping list');
           this.shoppingList.set(null);
         }
       });
@@ -48,22 +51,31 @@ export class ShoppingListPage implements OnInit {
     this.shoppingListService
       .updateItem(itemId, { quantity: newQuantity })
       .subscribe({
-        next: (list) => this.shoppingList.set(list),
-        error: (err) => console.error('Failed to update quantity!!', err)
+        next: (list) => {
+          this.shoppingList.set(list);
+          this.toast.success('Quantity updated');
+        },
+        error: (err) => this.toast.handleError(err, 'Failed to update quantity')
       });
   }
 
   removeItem(itemId: number): void {
     this.shoppingListService.removeItem(itemId).subscribe({
-      next: () => this.loadShoppingList(),
-      error: (err) => console.error('Failed to remove item!!', err)
+      next: () => {
+        this.toast.success('Item removed');
+        this.loadShoppingList();
+      },
+      error: (err) => this.toast.handleError(err, 'Failed to remove item')
     });
   }
 
   clearAll(): void {
     this.shoppingListService.clearAll().subscribe({
-      next: () => this.loadShoppingList(),
-      error: (err) => console.error('Failed to clear list!!', err)
+      next: () => {
+        this.toast.success('Shopping list cleared');
+        this.loadShoppingList();
+      },
+      error: (err) => this.toast.handleError(err, 'Failed to clear shopping list')
     });
   }
 }

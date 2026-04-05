@@ -7,6 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { AuthService } from '../../../../core/services/auth.service';
+import { ToastService } from '../../../../shared/services/toast.service';
 import { Router } from '@angular/router';
 import { finalize } from 'rxjs';
 
@@ -27,6 +28,7 @@ import { finalize } from 'rxjs';
 export class AuthPage {
   private readonly fb = new FormBuilder();
   private readonly authService = inject(AuthService);
+  private readonly toast = inject(ToastService);
   private readonly router = inject(Router);
 
 
@@ -76,11 +78,14 @@ export class AuthPage {
         })
         .pipe(finalize(() => this.isSubmitting.set(false)))
         .subscribe({
-          next: () => this.redirectAfterAuth(),
-          error: (error) => {
-            this.errorMessage.set(
-              error?.error?.message || 'Signup failed. Please try again.'
-            );
+          next: () => {
+            this.toast.success('Account created successfully!');
+            this.redirectAfterAuth();
+          },
+          error: (err) => {
+            const msg = err?.error?.error || 'Signup failed. Please try again.';
+            this.errorMessage.set(msg);
+            this.toast.error(msg);
           }
         });
 
@@ -94,11 +99,14 @@ export class AuthPage {
       })
       .pipe(finalize(() => this.isSubmitting.set(false)))
       .subscribe({
-        next: () => this.redirectAfterAuth(),
-        error: (error) => {
-          this.errorMessage.set(
-            error?.error?.message || 'Login failed. Please check your credentials!!'
-          );
+        next: () => {
+          this.toast.success('Welcome back!');
+          this.redirectAfterAuth();
+        },
+        error: (err) => {
+          const msg = err?.error?.error || 'Login failed. Please check your credentials!';
+          this.errorMessage.set(msg);
+          this.toast.error(msg);
         }
       });
   }

@@ -8,6 +8,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialog } from '@angular/material/dialog';
 import { AdminService } from '../../../../core/services/admin.service';
 import { ImportDialog, ImportDialogResult } from './import-dialog';
+import { ToastService } from '../../../../shared/services/toast.service';
 import { finalize } from 'rxjs';
 
 @Component({
@@ -26,6 +27,7 @@ import { finalize } from 'rxjs';
 export class ProductImportPage {
   private readonly adminService = inject(AdminService);
   private readonly dialog = inject(MatDialog);
+  private readonly toast = inject(ToastService);
 
   searchQuery = signal('');
   allResults = signal<any[]>([]);
@@ -61,7 +63,8 @@ export class ProductImportPage {
       .subscribe({
         next: (data) => this.allResults.set(data.content ?? data ?? []),
         error: (err) => {
-          console.error('Search failed', err);
+          console.error('search failed', err);
+          this.toast.error('server is busy just click search again!');
           this.allResults.set([]);
         }
       });
@@ -101,8 +104,8 @@ export class ProductImportPage {
 
       const item = result.products[0];
       this.adminService.importProduct(item.externalId, item.estimatedPrice).subscribe({
-        next: () => console.log('Product imported!'),
-        error: (err) => console.error('Import failed', err)
+        next: () => this.toast.success('Product imported successfully!'),
+        error: (err) => this.toast.handleError(err, 'Failed to import product')
       });
     });
   }
@@ -130,10 +133,10 @@ export class ProductImportPage {
 
       this.adminService.bulkImport(result.products).subscribe({
         next: () => {
-          console.log('Bulk import done!');
+          this.toast.success(`${result.products.length} products imported successfully!`);
           this.selectedIds.set(new Set());
         },
-        error: (err) => console.error('Bulk import failed', err)
+        error: (err) => this.toast.handleError(err, 'Bulk import failed')
       });
     });
   }

@@ -5,6 +5,7 @@ import { RouterLink, ActivatedRoute} from '@angular/router';
 import { ProductService } from '../../../../core/services/product.service';
 import { ShoppingListService } from '../../../../core/services/shopping-list.service';
 import { Product } from '../../../../core/models/product.model';
+import { ToastService } from '../../../../shared/services/toast.service';
 import { finalize } from 'rxjs';
 
 @Component({
@@ -17,6 +18,7 @@ export class ProductDetailPage implements OnInit{
   private readonly route = inject(ActivatedRoute);
   private readonly productService = inject(ProductService);
   private readonly shoppingListService = inject(ShoppingListService);
+  private readonly toast = inject(ToastService);
 
   readonly product = signal<Product | null>(null);
   readonly loading = signal(false);
@@ -49,8 +51,9 @@ export class ProductDetailPage implements OnInit{
       .pipe(finalize(() => this.loading.set(false)))
       .subscribe({
         next: (product) => this.product.set(product),
-        error: (error) => {
-          console.error('Failed to load product details!!', error);
+        error: (err) => {
+          console.error('Failed to load product details!!', err);
+          this.toast.handleError(err, 'Failed to load product details');
           this.product.set(null);
         }
       });
@@ -73,8 +76,8 @@ export class ProductDetailPage implements OnInit{
     this.shoppingListService
       .addItem({ productId: current.id, quantity: this.quantity() })
       .subscribe({
-        next: () => console.log('Added to shopping list!'),
-        error: (err) => console.error('Failed to add item!!', err)
+        next: () => this.toast.success('Added to shopping list!'),
+        error: (err) => this.toast.handleError(err, 'Failed to add item to shopping list')
       });
   }
 }

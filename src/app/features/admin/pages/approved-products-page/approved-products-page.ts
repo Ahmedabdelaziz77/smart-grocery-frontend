@@ -8,6 +8,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { AdminService } from '../../../../core/services/admin.service';
 import { ProductService } from '../../../../core/services/product.service';
 import { Product } from '../../../../core/models/product.model';
+import { ToastService } from '../../../../shared/services/toast.service';
 import { finalize } from 'rxjs';
 
 @Component({
@@ -26,6 +27,7 @@ import { finalize } from 'rxjs';
 export class ApprovedProductsPage implements OnInit {
   private readonly adminService = inject(AdminService);
   private readonly productService = inject(ProductService);
+  private readonly toast = inject(ToastService);
 
   searchTerm = signal('');
   selectedCategory = signal('');
@@ -64,6 +66,7 @@ export class ApprovedProductsPage implements OnInit {
         },
         error: (err) => {
           console.error('Failed to load approved products', err);
+          this.toast.handleError(err, 'Failed to load approved products');
           this.products.set([]);
         }
       });
@@ -90,8 +93,11 @@ export class ApprovedProductsPage implements OnInit {
 
   removeProduct(id: number): void {
     this.adminService.deleteProduct(id).subscribe({
-      next: () => this.loadProducts(this.page()),
-      error: (err) => console.error('Failed to remove product', err)
+      next: () => {
+        this.toast.success('Product removed');
+        this.loadProducts(this.page());
+      },
+      error: (err) => this.toast.handleError(err, 'Failed to remove product')
     });
   }
 

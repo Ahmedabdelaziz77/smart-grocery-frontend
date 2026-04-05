@@ -62,3 +62,43 @@ textarea {
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+// Toast notification styles
+.toast-success .mdc-snackbar__surface {
+  background: #16a34a !important;
+  color: #fff !important;
+}
+
+.toast-success .mdc-snackbar__label {
+  color: #fff !important;
+}
+
+.toast-success .mat-mdc-button.mat-mdc-snack-bar-action {
+  color: #bbf7d0 !important;
+}
+
+.toast-error .mdc-snackbar__surface {
+  background: #dc2626 !important;
+  color: #fff !important;
+}
+
+.toast-error .mdc-snackbar__label {
+  color: #fff !important;
+}
+
+.toast-error .mat-mdc-button.mat-mdc-snack-bar-action {
+  color: #fecaca !important;
+}
+
+.toast-info .mdc-snackbar__surface {
+  background: #2563eb !important;
+  color: #fff !important;
+}
+
+.toast-info .mdc-snackbar__label {
+  color: #fff !important;
+}
+
+.toast-info .mat-mdc-button.mat-mdc-snack-bar-action {
+  color: #bfdbfe !important;
+}

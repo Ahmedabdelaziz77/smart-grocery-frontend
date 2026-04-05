@@ -9,6 +9,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ProductService } from '../../../../core/services/product.service';
 import { ShoppingListService } from '../../../../core/services/shopping-list.service';
+import { ToastService } from '../../../../shared/services/toast.service';
 import { finalize } from 'rxjs';
 
 @Component({
@@ -25,12 +26,13 @@ import { finalize } from 'rxjs';
   templateUrl: './grocery-items-page.html',
   styleUrl: './grocery-items-page.scss',
 })
-export class GroceryItemsPage implements OnInit{
+export class GroceryItemsPage implements OnInit {
   readonly searchTerm = signal('');
   readonly selectedCategory = signal('');
 
   private readonly productService = inject(ProductService);
   private readonly shoppingListService = inject(ShoppingListService);
+  private readonly toast = inject(ToastService);
 
   readonly categories = signal<string[]>([]);
   readonly products = signal<Product[]>([]);
@@ -70,8 +72,9 @@ export class GroceryItemsPage implements OnInit{
           this.isFirstPage.set(response.first);
           this.isLastPage.set(response.last);
         },
-        error: (error) => {
-          console.error('Failed to load products!!', error);
+        error: (err) => {
+          console.error('Failed to load products!!', err);
+          this.toast.handleError(err, 'Failed to load products');
           this.products.set([]);
         }
       });
@@ -114,8 +117,8 @@ export class GroceryItemsPage implements OnInit{
 
   addToList(productId: number): void {
     this.shoppingListService.addItem({ productId, quantity: 1 }).subscribe({
-      next: () => console.log('Item added to shopping list'),
-      error: (err) => console.error('Failed to add item', err)
+      next: () => this.toast.success('Item added to shopping list'),
+      error: (err) => this.toast.handleError(err, 'Failed to add item to shopping list')
     });
   }
 }

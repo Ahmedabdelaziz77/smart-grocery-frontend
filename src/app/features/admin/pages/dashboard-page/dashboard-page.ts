@@ -2,6 +2,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { AdminService, DashboardData } from '../../../../core/services/admin.service';
+import { ToastService } from '../../../../shared/services/toast.service';
 import { finalize } from 'rxjs';
 
 @Component({
@@ -12,6 +13,7 @@ import { finalize } from 'rxjs';
 })
 export class DashboardPage implements OnInit {
   private readonly adminService = inject(AdminService);
+  private readonly toast = inject(ToastService);
 
   dashboard = signal<DashboardData | null>(null);
   loading = signal(false);
@@ -30,6 +32,7 @@ export class DashboardPage implements OnInit {
         next: (data) => this.dashboard.set(data),
         error: (err) => {
           console.error('Failed to load dashboard', err);
+          this.toast.handleError(err, 'Failed to load dashboard data');
           this.dashboard.set(null);
         }
       });
