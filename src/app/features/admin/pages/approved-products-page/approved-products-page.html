@@ -5,38 +5,50 @@
   </div>
 
   <div class="filters">
-    <div class="filters__left">
-      <mat-form-field appearance="outline" class="search-field">
-        <mat-label>Search</mat-label>
-        <input matInput [value]="searchTerm()" (input)="searchTerm.set($any($event.target).value)" (keyup.enter)="onSearch()" placeholder="Search products..." />
-      </mat-form-field>
-
-      <button mat-stroked-button type="button" class="search-btn" (click)="onSearch()">
-        Search
-      </button>
+    <div class="search-bar">
+      <div class="search-input-wrap">
+        <span class="material-icons search-input-icon">search</span>
+        <input
+          class="search-input"
+          type="text"
+          [value]="searchTerm()"
+          (input)="searchTerm.set($any($event.target).value)"
+          (keyup.enter)="onSearch()"
+          placeholder="Search products..." />
+      </div>
+      <button class="search-btn" type="button" (click)="onSearch()">Search</button>
     </div>
 
-    <mat-form-field appearance="outline" class="category-field">
-      <mat-label>Category</mat-label>
-      <mat-select [value]="selectedCategory()" (valueChange)="onCategoryChange($event)">
-        <mat-option value="">All Categories</mat-option>
+    <div class="category-select-wrap">
+      <span class="material-icons category-select-icon">filter_list</span>
+      <select
+        class="category-select"
+        [value]="selectedCategory()"
+        (change)="onCategoryChange($any($event.target).value)">
+        <option value="">All Categories</option>
         @for (category of categories(); track category) {
-        <mat-option [value]="category">
-          {{ category }}
-        </mat-option>
+        <option [value]="category">{{ category }}</option>
         }
-      </mat-select>
-    </mat-form-field>
+      </select>
+      <span class="material-icons category-select-arrow">expand_more</span>
+    </div>
   </div>
 
   @if (loading()) {
-  <div class="state-message">Loading products...</div>
+  <div class="empty-state">
+    <span class="material-icons spin-icon empty-state__icon">sync</span>
+    <div class="empty-state__title">Loading products...</div>
+  </div>
   } @else if (!products().length) {
-  <div class="state-message">No approved products found.</div>
+  <div class="empty-state">
+    <span class="material-icons empty-state__icon">inventory_2</span>
+    <div class="empty-state__title">No products found</div>
+    <div class="empty-state__text">Try adjusting your search or category filter</div>
+  </div>
   } @else {
   <div class="product-grid">
     @for (product of products(); track product.id) {
-    <mat-card class="product-card">
+    <div class="product-card">
       <div class="product-card__image-wrap">
         <img class="product-card__image" [src]="product.imageUrl" [alt]="product.name" />
         <div class="price-badge">${{ product.estimatedPrice }}</div>
@@ -53,12 +65,13 @@
         <p class="product-description">{{ product.description }}</p>
 
         <div class="product-card__actions">
-          <button mat-flat-button type="button" class="remove-btn" (click)="removeProduct(product.id)">
+          <button class="remove-btn" type="button" (click)="removeProduct(product.id)">
+            <span class="material-icons remove-btn__icon">delete_outline</span>
             Remove
           </button>
         </div>
       </div>
-    </mat-card>
+    </div>
     }
   </div>
   }
@@ -68,7 +81,7 @@
       Previous
     </button>
 
-    <span>Page {{ page() + 1 }} of {{ totalPages() || 1 }}</span>
+    <span class="pagination__info">Page {{ page() + 1 }} of {{ totalPages() || 1 }}</span>
 
     <button mat-stroked-button type="button" (click)="goToNextPage()" [disabled]="isLastPage()">
       Next
