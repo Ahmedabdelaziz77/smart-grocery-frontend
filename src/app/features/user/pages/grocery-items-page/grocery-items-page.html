@@ -5,80 +5,84 @@
   </div>
 
   <div class="filters">
-    <div class="filters__left">
-      <mat-form-field appearance="outline" class="search-field">
-        <mat-label>Search</mat-label>
-        <input matInput [value]="searchTerm()" (input)="searchTerm.set($any($event.target).value)" (keyup.enter)="onSearch()" placeholder="Search groceries..." />
-      </mat-form-field>
-
-      <button mat-stroked-button type="button" class="search-btn" (click)="onSearch()">
-        Search
-      </button>
+    <div class="search-bar">
+      <div class="search-input-wrap">
+        <span class="material-icons search-input-icon">search</span>
+        <input
+          class="search-input"
+          type="text"
+          [value]="searchTerm()"
+          (input)="searchTerm.set($any($event.target).value)"
+          (keyup.enter)="onSearch()"
+          placeholder="Search groceries..." />
+      </div>
+      <button class="search-btn" type="button" (click)="onSearch()">Search</button>
     </div>
 
-    <mat-form-field appearance="outline" class="category-field">
-      <mat-label>Category</mat-label>
-      <mat-select [value]="selectedCategory()" (valueChange)="onCategoryChange($event)">
-        <mat-option value="">All Categories</mat-option>
+    <div class="category-select-wrap">
+      <span class="material-icons category-select-icon">filter_list</span>
+      <select
+        class="category-select"
+        [value]="selectedCategory()"
+        (change)="onCategoryChange($any($event.target).value)">
+        <option value="">All Categories</option>
         @for (category of categories(); track category) {
-        <mat-option [value]="category">
-          {{ category }}
-        </mat-option>
+        <option [value]="category">{{ category }}</option>
         }
-      </mat-select>
-    </mat-form-field>
+      </select>
+      <span class="material-icons category-select-arrow">expand_more</span>
+    </div>
   </div>
 
   @if (loading()) {
-  <div class="state-message">Loading products...</div>
+  <div class="empty-state">
+    <span class="material-icons spin-icon empty-state__icon">sync</span>
+    <div class="empty-state__title">Loading products...</div>
+  </div>
   } @else if (!products().length) {
-  <div class="state-message">No products found.</div>
+  <div class="empty-state">
+    <span class="material-icons empty-state__icon">shopping_cart</span>
+    <div class="empty-state__title">No products found</div>
+    <div class="empty-state__text">Try adjusting your search or category filter</div>
+  </div>
   } @else {
   <div class="product-grid">
     @for (product of products(); track product.id) {
-    <mat-card class="product-card">
+    <div class="product-card">
       <div class="product-card__image-wrap">
         <img class="product-card__image" [src]="product.imageUrl" [alt]="product.name" />
-        <div class="price-badge">$
-          {{ product.estimatedPrice }}
-        </div>
+        <div class="price-badge">${{ product.estimatedPrice }}</div>
       </div>
 
       <div class="product-card__content">
-        <h3 class="product-name">
-          {{ product.name }}
-        </h3>
+        <h3 class="product-name">{{ product.name }}</h3>
 
         <div class="product-meta">
-          <span class="category-pill">
-            {{ product.category }}</span>
-          <span class="kcal">
-            {{ product.calories }} kcal</span>
+          <span class="category-pill">{{ product.category }}</span>
+          <span class="kcal">{{ product.calories }} kcal</span>
         </div>
 
         <div class="product-card__actions">
-          <a mat-stroked-button [routerLink]="['/groceries', product.id]">
+          <a class="details-btn" [routerLink]="['/groceries', product.id]">
             Details
           </a>
-
-          <button mat-flat-button type="button" class="add-btn" (click)="addToList(product.id)">
+          <button class="add-btn" type="button" (click)="addToList(product.id)">
+            <span class="material-icons add-btn__icon">shopping_cart</span>
             Add
           </button>
         </div>
       </div>
-    </mat-card>
+    </div>
     }
   </div>
   }
 
-  <div class="pagination-placeholder">
+  <div class="pagination">
     <button mat-stroked-button type="button" (click)="goToPreviousPage()" [disabled]="isFirstPage()">
       Previous
     </button>
 
-    <span>Page
-      {{ page() + 1 }} of
-      {{ totalPages() || 1 }}</span>
+    <span class="pagination__info">Page {{ page() + 1 }} of {{ totalPages() || 1 }}</span>
 
     <button mat-stroked-button type="button" (click)="goToNextPage()" [disabled]="isLastPage()">
       Next

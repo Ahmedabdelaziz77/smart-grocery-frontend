@@ -1,10 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { Product } from '../../../../core/models/product.model';
 import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ProductService } from '../../../../core/services/product.service';
@@ -17,11 +13,7 @@ import { finalize } from 'rxjs';
   imports: [
     CommonModule,
     RouterLink,
-    MatCardModule,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule
+    MatButtonModule
   ],
   templateUrl: './grocery-items-page.html',
   styleUrl: './grocery-items-page.scss',
