@@ -1,9 +1,6 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialog } from '@angular/material/dialog';
 import { AdminService } from '../../../../core/services/admin.service';
@@ -15,10 +12,7 @@ import { finalize } from 'rxjs';
   selector: 'app-product-import-page',
   imports: [
     CommonModule,
-    MatCardModule,
     MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule,
     MatCheckboxModule
   ],
   templateUrl: './product-import-page.html',
@@ -32,7 +26,13 @@ export class ProductImportPage {
   searchQuery = signal('');
   allResults = signal<any[]>([]);
   loading = signal(false);
+  hasSearched = signal(false);
   selectedIds = signal<Set<string>>(new Set());
+
+  readonly popularSearches = [
+    'Chicken', 'Rice', 'Pasta', 'Eggs', 'Milk',
+    'Salmon', 'Oats', 'Yogurt', 'Bread', 'Beans'
+  ];
 
   // client-side pagination
   page = signal(0);
@@ -49,6 +49,11 @@ export class ProductImportPage {
 
   selectedCount = computed(() => this.selectedIds().size);
 
+  quickSearch(term: string): void {
+    this.searchQuery.set(term);
+    this.onSearch();
+  }
+
   onSearch(): void {
     const query = this.searchQuery().trim();
     if (!query) return;
@@ -61,11 +66,15 @@ export class ProductImportPage {
       .searchExternal(query)
       .pipe(finalize(() => this.loading.set(false)))
       .subscribe({
-        next: (data) => this.allResults.set(data.content ?? data ?? []),
+        next: (data) => {
+          this.allResults.set(data.content ?? data ?? []);
+          this.hasSearched.set(true);
+        },
         error: (err) => {
           console.error('search failed', err);
           this.toast.error('server is busy just click search again!');
           this.allResults.set([]);
+          this.hasSearched.set(true);
         }
       });
   }

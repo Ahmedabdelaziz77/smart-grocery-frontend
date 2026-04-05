@@ -1,36 +1,68 @@
 <div class="import-page">
   <div class="page-header">
     <div>
-      <h1>Product Import</h1>
-      <p>Search and import products from Open Food Facts</p>
+      <h1>Import Products</h1>
+      <p>Search Open Food Facts and import products into your catalog</p>
     </div>
 
     @if (selectedCount() > 0) {
     <button mat-flat-button class="bulk-btn" (click)="openBulkImport()">
+      <span class="material-icons bulk-btn__icon">file_download</span>
       Import Selected ({{ selectedCount() }})
     </button>
     }
   </div>
 
+  <!-- Search bar -->
   <div class="search-bar">
-    <mat-form-field appearance="outline" class="search-field">
-      <mat-label>Search</mat-label>
-      <input matInput [value]="searchQuery()" (input)="searchQuery.set($any($event.target).value)" (keyup.enter)="onSearch()" placeholder="Search for products..." />
-    </mat-form-field>
-
-    <button mat-stroked-button type="button" class="search-btn" (click)="onSearch()">
-      Search
-    </button>
+    <div class="search-input-wrap">
+      <span class="material-icons search-input-icon">search</span>
+      <input
+        class="search-input"
+        type="text"
+        [value]="searchQuery()"
+        (input)="searchQuery.set($any($event.target).value)"
+        (keyup.enter)="onSearch()"
+        placeholder='Search food products (e.g. "chicken", "rice"...)' />
+    </div>
+    <button class="search-btn" type="button" (click)="onSearch()">Search</button>
   </div>
 
+  <!-- Popular searches -->
+  <div class="popular-searches">
+    <span class="popular-label">Popular searches</span>
+    <div class="popular-chips">
+      @for (term of popularSearches; track term) {
+      <button class="chip" type="button" (click)="quickSearch(term)">{{ term }}</button>
+      }
+    </div>
+  </div>
+
+  <!-- States -->
   @if (loading()) {
-  <div class="state-message">Searching products...</div>
-  } @else if (!allResults().length) {
-  <div class="state-message">Search for products to import them into your catalog.</div>
+  <div class="empty-state">
+    <span class="material-icons spin-icon empty-state__icon">sync</span>
+    <div class="empty-state__title">Searching products...</div>
+    <div class="empty-state__text">This may take a few seconds</div>
+  </div>
+  } @else if (!allResults().length && !hasSearched()) {
+  <div class="empty-state">
+    <span class="material-icons empty-state__icon">search</span>
+    <div class="empty-state__title">Search for products to import</div>
+    <div class="empty-state__text">Use the search bar above or pick a popular search to get started</div>
+  </div>
+  } @else if (!allResults().length && hasSearched()) {
+  <div class="empty-state">
+    <span class="material-icons empty-state__icon">search_off</span>
+    <div class="empty-state__title">No results found</div>
+    <div class="empty-state__text">Try a different search term or check your spelling</div>
+  </div>
   } @else {
+
+  <!-- Results grid -->
   <div class="result-grid">
     @for (product of pagedResults(); track product.externalId || product.id) {
-    <mat-card class="result-card" [class.result-card--selected]="isSelected(product)">
+    <div class="result-card" [class.result-card--selected]="isSelected(product)">
       <div class="result-card__top">
         <mat-checkbox [checked]="isSelected(product)" (change)="toggleSelection(product)"></mat-checkbox>
       </div>
@@ -48,21 +80,23 @@
         </div>
 
         <div class="result-card__actions">
-          <button mat-flat-button type="button" class="import-btn" (click)="openSingleImport(product)">
+          <button class="import-btn" type="button" (click)="openSingleImport(product)">
+            <span class="material-icons import-btn__icon">file_download</span>
             Import
           </button>
         </div>
       </div>
-    </mat-card>
+    </div>
     }
   </div>
 
+  <!-- Pagination -->
   <div class="pagination">
     <button mat-stroked-button type="button" (click)="goToPreviousPage()" [disabled]="isFirstPage()">
       Previous
     </button>
 
-    <span>Page {{ page() + 1 }} of {{ totalPages() || 1 }}</span>
+    <span class="pagination__info">Page {{ page() + 1 }} of {{ totalPages() || 1 }}</span>
 
     <button mat-stroked-button type="button" (click)="goToNextPage()" [disabled]="isLastPage()">
       Next
