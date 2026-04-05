@@ -6,21 +6,33 @@
     </div>
 
     @if (items().length) {
-    <button mat-stroked-button class="clear-btn" (click)="clearAll()">
+    <button class="clear-btn" type="button" (click)="clearAll()">
+      <span class="material-icons clear-btn__icon">delete_sweep</span>
       Clear All
     </button>
     }
   </div>
 
   @if (loading()) {
-  <div class="state-message">Loading shopping list...</div>
+  <div class="empty-state">
+    <span class="material-icons spin-icon empty-state__icon">sync</span>
+    <div class="empty-state__title">Loading shopping list...</div>
+  </div>
   } @else if (!items().length) {
-  <div class="state-message">Your shopping list is empty.</div>
+  <div class="empty-state">
+    <span class="material-icons empty-state__icon">shopping_bag</span>
+    <div class="empty-state__title">Your shopping list is empty</div>
+    <div class="empty-state__text">Browse grocery items and start adding products</div>
+    <a class="empty-state__action" routerLink="/groceries">
+      <span class="material-icons">add</span>
+      Browse Groceries
+    </a>
+  </div>
   } @else {
   <div class="list-layout">
     <div class="list-items">
       @for (item of items(); track item.id) {
-      <mat-card class="list-item">
+      <div class="list-item">
         <div class="item-image">
           <img [src]="item.imageUrl" [alt]="item.productName" />
         </div>
@@ -28,7 +40,8 @@
         <div class="item-info">
           <div class="item-name">{{ item.productName }}</div>
           <div class="item-meta">
-            {{ item.category }} · ${{ item.estimatedPrice }} / Ea
+            <span class="item-category">{{ item.category }}</span>
+            <span class="item-price-ea">${{ item.estimatedPrice }} / Ea</span>
           </div>
         </div>
 
@@ -39,11 +52,15 @@
         </div>
 
         <div class="item-total">${{ item.totalPrice }}</div>
-      </mat-card>
+
+        <button class="item-remove" type="button" (click)="removeItem(item.id)" title="Remove item">
+          <span class="material-icons">close</span>
+        </button>
+      </div>
       }
     </div>
 
-    <mat-card class="summary-card">
+    <div class="summary-card">
       <h3>Summary</h3>
 
       <div class="summary-row">
@@ -63,8 +80,11 @@
 
       <p class="summary-note">Prices are estimates and may vary by store.</p>
 
-      <a mat-flat-button class="continue-btn" routerLink="/groceries">Continue Shopping</a>
-    </mat-card>
+      <a class="continue-btn" routerLink="/groceries">
+        <span class="material-icons continue-btn__icon">shopping_cart</span>
+        Continue Shopping
+      </a>
+    </div>
   </div>
   }
 </div>
