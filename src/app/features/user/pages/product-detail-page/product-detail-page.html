@@ -1,10 +1,24 @@
 <div class="detail-page">
   @if (loading()) {
-  <div class="state-message">Loading product...</div>
+  <div class="empty-state">
+    <span class="material-icons spin-icon empty-state__icon">sync</span>
+    <div class="empty-state__title">Loading product...</div>
+  </div>
   } @else if (!product()) {
-  <div class="state-message">Product not found.</div>
+  <div class="empty-state">
+    <span class="material-icons empty-state__icon">error_outline</span>
+    <div class="empty-state__title">Product not found</div>
+    <div class="empty-state__text">This product may have been removed or doesn't exist</div>
+    <a class="empty-state__action" [routerLink]="['/groceries']">
+      <span class="material-icons">arrow_back</span>
+      Back to Groceries
+    </a>
+  </div>
   } @else {
-  <a class="back-link" [routerLink]="['/groceries']">← Back to Groceries</a>
+  <a class="back-link" [routerLink]="['/groceries']">
+    <span class="material-icons back-link__icon">arrow_back</span>
+    Back to Groceries
+  </a>
 
   <div class="detail-layout">
     <div class="detail-image-panel">
@@ -12,50 +26,45 @@
     </div>
 
     <div class="detail-info-panel">
-      <div class="category-badge">
-        {{ product()!.category }}
-      </div>
+      <div class="category-badge">{{ product()!.category }}</div>
 
-      <h1>
-        {{ product()!.name }}
-      </h1>
+      <h1>{{ product()!.name }}</h1>
+
       <p class="brand">
-        {{ product()!.brand }}
+        <span class="material-icons brand__icon">storefront</span>
+        {{ product()!.brand || 'Unknown brand' }}
       </p>
 
-      <div class="price">$
-        {{ product()!.estimatedPrice }}
-      </div>
+      <div class="price">${{ product()!.estimatedPrice }}</div>
 
       <p class="description">
         {{ product()!.description || 'No description available for this product.' }}
       </p>
 
       <div class="nutrition-card">
-        <div class="nutrition-title">Nutrition Facts</div>
+        <div class="nutrition-title">
+          <span class="material-icons nutrition-title__icon">monitoring</span>
+          Nutrition Facts
+        </div>
 
         <div class="nutrition-grid">
           <div class="nutrition-item">
-            <strong>
-              {{ product()!.calories }}</strong>
+            <strong>{{ product()!.calories }}</strong>
             <span>Calories</span>
           </div>
 
           <div class="nutrition-item">
-            <strong>
-              {{ product()!.protein }}g</strong>
+            <strong>{{ product()!.protein }}g</strong>
             <span>Protein</span>
           </div>
 
           <div class="nutrition-item">
-            <strong>
-              {{ product()!.carbs }}g</strong>
+            <strong>{{ product()!.carbs }}g</strong>
             <span>Carbs</span>
           </div>
 
           <div class="nutrition-item">
-            <strong>
-              {{ product()!.fat }}g</strong>
+            <strong>{{ product()!.fat }}g</strong>
             <span>Fat</span>
           </div>
         </div>
@@ -64,14 +73,16 @@
       <div class="action-row">
         <div class="quantity-box">
           <button type="button" (click)="decreaseQuantity()">−</button>
-          <span>
-            {{ quantity() }}</span>
+          <span>{{ quantity() }}</span>
           <button type="button" (click)="increaseQuantity()">+</button>
         </div>
 
         <button type="button" class="add-btn" (click)="addToList()">
+          <span class="material-icons add-btn__icon">shopping_cart</span>
           Add to List
         </button>
+
+        <div class="action-total">${{ totalPrice().toFixed(2) }}</div>
       </div>
     </div>
   </div>

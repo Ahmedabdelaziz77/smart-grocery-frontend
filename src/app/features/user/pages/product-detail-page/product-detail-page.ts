@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
 import { RouterLink, ActivatedRoute } from '@angular/router';
 import { ProductService } from '../../../../core/services/product.service';
 import { ShoppingListService } from '../../../../core/services/shopping-list.service';
@@ -10,7 +9,7 @@ import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-product-detail-page',
-  imports: [CommonModule, RouterLink, MatButtonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './product-detail-page.html',
   styleUrl: './product-detail-page.scss',
 })
