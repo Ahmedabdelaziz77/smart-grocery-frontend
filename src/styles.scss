@@ -118,6 +118,17 @@ textarea {
   }
 }
 
+// ── Dialog backdrop blur ──
+.cdk-overlay-backdrop.cdk-overlay-backdrop-showing {
+  backdrop-filter: blur(6px);
+  background: rgba(15, 23, 42, 0.3);
+}
+
+.mat-mdc-dialog-container .mdc-dialog__surface {
+  border-radius: 18px !important;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15) !important;
+}
+
 // ── Toast notification styles ──
 .toast-success .mdc-snackbar__surface {
   background: #16a34a !important;
