@@ -2,10 +2,10 @@
   <div class="auth-card">
     <div class="auth-header">
       <div class="auth-logo">
-        <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none"
-          stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/>
-          <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>
+        <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="8" cy="21" r="1" />
+          <circle cx="19" cy="21" r="1" />
+          <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
         </svg>
       </div>
       <h1 class="auth-title">SmartGrocery</h1>
@@ -23,13 +23,7 @@
       <div class="field-group">
         <label class="field-label" for="fullName">Full Name</label>
         <div class="input-wrap">
-          <input
-            id="fullName"
-            class="auth-input"
-            type="text"
-            formControlName="fullName"
-            placeholder="John Doe"
-            autocomplete="name" />
+          <input id="fullName" class="auth-input" type="text" formControlName="fullName" placeholder="John Doe" autocomplete="name" />
         </div>
         @if (form.get('fullName')?.hasError('required') && form.get('fullName')?.touched) {
         <span class="field-error">Full name is required</span>
@@ -43,13 +37,7 @@
       <div class="field-group">
         <label class="field-label" for="email">Email</label>
         <div class="input-wrap">
-          <input
-            id="email"
-            class="auth-input"
-            type="email"
-            formControlName="email"
-            placeholder="name@example.com"
-            autocomplete="email" />
+          <input id="email" class="auth-input" type="email" formControlName="email" placeholder="name@example.com" autocomplete="email" />
         </div>
         @if (form.get('email')?.hasError('required') && form.get('email')?.touched) {
         <span class="field-error">Email is required</span>
@@ -62,13 +50,11 @@
       <div class="field-group">
         <label class="field-label" for="password">Password</label>
         <div class="input-wrap">
-          <input
-            id="password"
-            class="auth-input"
-            type="password"
-            formControlName="password"
-            placeholder="••••••••"
-            autocomplete="current-password" />
+          <input id="password" class="auth-input auth-input--password" [type]="showPassword() ? 'text' : 'password'" formControlName="password" placeholder="••••••••" autocomplete="current-password" />
+          <button type="button" class="password-toggle" (click)="togglePassword()" tabindex="-1">
+            <span class="material-icons">
+              {{ showPassword() ? 'visibility' : 'visibility_off' }}</span>
+          </button>
         </div>
         @if (form.get('password')?.hasError('required') && form.get('password')?.touched) {
         <span class="field-error">Password is required</span>
@@ -80,26 +66,21 @@
 
       @if (errorMessage()) {
       <div class="auth-error">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="10"/>
-          <line x1="12" y1="8" x2="12" y2="12"/>
-          <line x1="12" y1="16" x2="12.01" y2="16"/>
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10" />
+          <line x1="12" y1="8" x2="12" y2="12" />
+          <line x1="12" y1="16" x2="12.01" y2="16" />
         </svg>
         {{ errorMessage() }}
       </div>
       }
 
-      <button
-        type="submit"
-        class="submit-btn"
-        [class.submit-btn--loading]="isSubmitting()"
-        [disabled]="isSubmitting()">
+      <button type="submit" class="submit-btn" [class.submit-btn--loading]="isSubmitting()" [disabled]="isSubmitting()">
         @if (isSubmitting()) {
-          <span class="spinner"></span>
-          Please wait...
+        <span class="spinner"></span>
+        Please wait...
         } @else {
-          {{ isSignupMode() ? 'Create account' : 'Sign in' }}
+        {{ isSignupMode() ? 'Create account' : 'Sign in' }}
         }
       </button>
     </form>
@@ -112,11 +93,7 @@
       <span class="auth-footer__text">
         {{ isSignupMode() ? 'Already have an account?' : "Don't have an account?" }}
       </span>
-      <button
-        type="button"
-        class="switch-btn"
-        (click)="toggleMode()"
-        [disabled]="isSubmitting()">
+      <button type="button" class="switch-btn" (click)="toggleMode()" [disabled]="isSubmitting()">
         {{ isSignupMode() ? 'Sign in' : 'Create account' }}
       </button>
     </div>

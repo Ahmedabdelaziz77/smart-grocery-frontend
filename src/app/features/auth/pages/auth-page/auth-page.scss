@@ -111,6 +111,35 @@
   }
 }
 
+.auth-input--password {
+  padding-right: 44px;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: #94a3b8;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: color 0.15s ease;
+
+  .material-icons {
+    font-size: 20px;
+  }
+
+  &:hover {
+    color: #334155;
+  }
+}
+
 // ── Validation errors ──
 .field-error {
   font-size: 12px;

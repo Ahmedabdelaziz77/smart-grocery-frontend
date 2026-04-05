@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { AdminService } from '../../../../core/services/admin.service';
@@ -31,8 +31,8 @@ export class ApprovedProductsPage implements OnInit {
   page = signal(0);
   size = 8;
   totalPages = signal(0);
-  isFirstPage = signal(true);
-  isLastPage = signal(true);
+  isFirstPage = computed(() => this.page() === 0);
+  isLastPage = computed(() => this.page() >= this.totalPages() - 1);
 
   ngOnInit(): void {
     this.loadCategories();
@@ -53,8 +53,6 @@ export class ApprovedProductsPage implements OnInit {
           this.products.set(response.content);
           this.page.set(response.page);
           this.totalPages.set(response.totalPages);
-          this.isFirstPage.set(response.first);
-          this.isLastPage.set(response.last);
         },
         error: (err) => {
           console.error('failed to load approved products', err);

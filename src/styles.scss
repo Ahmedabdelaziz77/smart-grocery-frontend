@@ -95,6 +95,29 @@ textarea {
   color: #64748b;
 }
 
+.pagination-btn {
+  height: 36px;
+  padding: 0 18px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  background: #fff;
+  color: #334155;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+
+  &:hover:not(:disabled) {
+    border-color: #cbd5e1;
+    background: #f8fafc;
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+}
+
 // ── Toast notification styles ──
 .toast-success .mdc-snackbar__surface {
   background: #16a34a !important;

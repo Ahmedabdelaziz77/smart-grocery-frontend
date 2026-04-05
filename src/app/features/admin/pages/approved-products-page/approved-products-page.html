@@ -74,17 +74,17 @@
     </div>
     }
   </div>
-  }
 
   <div class="pagination">
-    <button mat-stroked-button type="button" (click)="goToPreviousPage()" [disabled]="isFirstPage()">
+    <button class="pagination-btn" type="button" (click)="goToPreviousPage()" [disabled]="isFirstPage()">
       Previous
     </button>
 
     <span class="pagination__info">Page {{ page() + 1 }} of {{ totalPages() || 1 }}</span>
 
-    <button mat-stroked-button type="button" (click)="goToNextPage()" [disabled]="isLastPage()">
+    <button class="pagination-btn" type="button" (click)="goToNextPage()" [disabled]="isLastPage()">
       Next
     </button>
   </div>
+  }
 </div>

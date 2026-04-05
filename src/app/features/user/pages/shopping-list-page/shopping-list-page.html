@@ -28,7 +28,7 @@
       Browse Groceries
     </a>
   </div>
-  } @else {
+  } @else{
   <div class="list-layout">
     <div class="list-items">
       @for (item of items(); track item.id) {
@@ -38,20 +38,27 @@
         </div>
 
         <div class="item-info">
-          <div class="item-name">{{ item.productName }}</div>
+          <div class="item-name">
+            {{ item.productName }}
+          </div>
           <div class="item-meta">
-            <span class="item-category">{{ item.category }}</span>
-            <span class="item-price-ea">${{ item.estimatedPrice }} / Ea</span>
+            <span class="item-category">
+              {{ item.category }}</span>
+            <span class="item-price-ea">$
+              {{ item.estimatedPrice }} / each</span>
           </div>
         </div>
 
         <div class="quantity-box">
           <button type="button" (click)="updateQuantity(item.id, item.quantity - 1)">−</button>
-          <span>{{ item.quantity }}</span>
+          <span>
+            {{ item.quantity }}</span>
           <button type="button" (click)="updateQuantity(item.id, item.quantity + 1)">+</button>
         </div>
 
-        <div class="item-total">${{ item.totalPrice }}</div>
+        <div class="item-total">$
+          {{ item.totalPrice }}
+        </div>
 
         <button class="item-remove" type="button" (click)="removeItem(item.id)" title="Remove item">
           <span class="material-icons">close</span>
@@ -65,17 +72,20 @@
 
       <div class="summary-row">
         <span>Total Items</span>
-        <span class="summary-value">{{ totalItems() }}</span>
+        <span class="summary-value">
+          {{ totalItems() }}</span>
       </div>
 
       <div class="summary-row">
         <span>Subtotal</span>
-        <span>${{ subtotal() }}</span>
+        <span>$
+          {{ subtotal() }}</span>
       </div>
 
       <div class="summary-total">
         <span>Total Estimated</span>
-        <span class="total-price">${{ subtotal() }}</span>
+        <span class="total-price">$
+          {{ subtotal() }}</span>
       </div>
 
       <p class="summary-note">Prices are estimates and may vary by store.</p>

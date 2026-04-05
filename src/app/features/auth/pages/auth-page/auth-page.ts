@@ -27,6 +27,7 @@ export class AuthPage {
   readonly isSignupMode = signal(false);
   readonly isSubmitting = signal(false);
   readonly errorMessage = signal('');
+  showPassword = signal(false);
 
 
   readonly form = this.fb.group({
@@ -34,6 +35,10 @@ export class AuthPage {
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(6)]]
   });
+
+  togglePassword(): void {
+    this.showPassword.update((value) => !value);
+  }
 
   toggleMode(): void {
     this.isSignupMode.update((value) => !value);

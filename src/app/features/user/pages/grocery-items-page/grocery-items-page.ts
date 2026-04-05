@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { Product } from '../../../../core/models/product.model';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
@@ -34,8 +34,8 @@ export class GroceryItemsPage implements OnInit {
   readonly size = 8;
   readonly totalPages = signal(0);
   readonly totalElements = signal(0);
-  readonly isFirstPage = signal(true);
-  readonly isLastPage = signal(true);
+  readonly isFirstPage = computed(() => this.page() === 0);
+  readonly isLastPage = computed(() => this.page() >= this.totalPages() - 1);
 
   ngOnInit(): void {
     this.loadCategories();
@@ -61,8 +61,6 @@ export class GroceryItemsPage implements OnInit {
           this.page.set(response.page);
           this.totalPages.set(response.totalPages);
           this.totalElements.set(response.totalElements);
-          this.isFirstPage.set(response.first);
-          this.isLastPage.set(response.last);
         },
         error: (err) => {
           console.error('Failed to load products!!', err);
