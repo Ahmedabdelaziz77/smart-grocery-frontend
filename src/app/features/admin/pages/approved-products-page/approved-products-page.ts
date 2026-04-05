@@ -48,8 +48,11 @@ export class ApprovedProductsPage implements OnInit {
   loadProducts(page = 0): void {
     this.loading.set(true);
 
+    const name = this.searchTerm().trim();
+    const category = this.selectedCategory().trim();
+
     this.adminService
-      .getApprovedProducts(page, this.size)
+      .getApprovedProducts(page, this.size, name, category)
       .pipe(finalize(() => this.loading.set(false)))
       .subscribe({
         next: (response) => {

@@ -73,8 +73,8 @@ export class ProductDetailPage implements OnInit{
     this.shoppingListService
       .addItem({ productId: current.id, quantity: this.quantity() })
       .subscribe({
-        next: () => console.log('Added to shopping list'),
-        error: (err) => console.error('Failed to add item', err)
+        next: () => console.log('Added to shopping list!'),
+        error: (err) => console.error('Failed to add item!!', err)
       });
   }
 }

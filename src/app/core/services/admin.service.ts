@@ -37,10 +37,22 @@ export class AdminService {
     return this.http.get(`${this.api}/search`, { params });
   }
 
-  getApprovedProducts(page = 0, size = 10): Observable<PaginatedResponse<Product>> {
-    const params = new HttpParams()
+  getApprovedProducts(page = 0, size = 10, name = '', category = ''): Observable<PaginatedResponse<Product>> {
+    let params = new HttpParams()
       .set('page', page)
       .set('size', size);
+
+    if (name) {
+      params = params.set('name', name);
+    } else {
+      params = params.set('name', '');
+    }
+
+    if (category) {
+      params = params.set('category', category);
+    } else {
+      params = params.set('category', '');
+    }
 
     return this.http.get<PaginatedResponse<Product>>(`${this.api}/approved`, { params });
   }
