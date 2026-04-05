@@ -53,7 +53,7 @@ export class ShoppingListPage implements OnInit {
       .subscribe({
         next: (list) => {
           this.shoppingList.set(list);
-          this.toast.success('Quantity updated');
+          this.toast.success('quantity updated!');
         },
         error: (err) => this.toast.handleError(err, 'Failed to update quantity')
       });
@@ -62,10 +62,10 @@ export class ShoppingListPage implements OnInit {
   removeItem(itemId: number): void {
     this.shoppingListService.removeItem(itemId).subscribe({
       next: () => {
-        this.toast.success('Item removed');
+        this.toast.success('item removed');
         this.loadShoppingList();
       },
-      error: (err) => this.toast.handleError(err, 'Failed to remove item')
+      error: (err) => this.toast.handleError(err, 'failed to remove item')
     });
   }
 
@@ -75,7 +75,7 @@ export class ShoppingListPage implements OnInit {
         this.toast.success('Shopping list cleared');
         this.loadShoppingList();
       },
-      error: (err) => this.toast.handleError(err, 'Failed to clear shopping list')
+      error: (err) => this.toast.handleError(err, 'failed to clear shopping list')
     });
   }
 }

@@ -65,8 +65,8 @@ export class ApprovedProductsPage implements OnInit {
           this.isLastPage.set(response.last);
         },
         error: (err) => {
-          console.error('Failed to load approved products', err);
-          this.toast.handleError(err, 'Failed to load approved products');
+          console.error('failed to load approved products', err);
+          this.toast.handleError(err, 'failed to load approved products');
           this.products.set([]);
         }
       });
@@ -94,7 +94,7 @@ export class ApprovedProductsPage implements OnInit {
   removeProduct(id: number): void {
     this.adminService.deleteProduct(id).subscribe({
       next: () => {
-        this.toast.success('Product removed');
+        this.toast.success('product removed');
         this.loadProducts(this.page());
       },
       error: (err) => this.toast.handleError(err, 'Failed to remove product')

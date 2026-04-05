@@ -104,8 +104,8 @@ export class ProductImportPage {
 
       const item = result.products[0];
       this.adminService.importProduct(item.externalId, item.estimatedPrice).subscribe({
-        next: () => this.toast.success('Product imported successfully!'),
-        error: (err) => this.toast.handleError(err, 'Failed to import product')
+        next: () => this.toast.success('product imported successfully!'),
+        error: (err) => this.toast.handleError(err, 'failed to import product!')
       });
     });
   }

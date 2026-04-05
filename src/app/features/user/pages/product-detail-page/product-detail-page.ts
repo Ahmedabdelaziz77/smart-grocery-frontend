@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { RouterLink, ActivatedRoute} from '@angular/router';
+import { RouterLink, ActivatedRoute } from '@angular/router';
 import { ProductService } from '../../../../core/services/product.service';
 import { ShoppingListService } from '../../../../core/services/shopping-list.service';
 import { Product } from '../../../../core/models/product.model';
@@ -14,7 +14,7 @@ import { finalize } from 'rxjs';
   templateUrl: './product-detail-page.html',
   styleUrl: './product-detail-page.scss',
 })
-export class ProductDetailPage implements OnInit{
+export class ProductDetailPage implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly productService = inject(ProductService);
   private readonly shoppingListService = inject(ShoppingListService);
@@ -52,8 +52,8 @@ export class ProductDetailPage implements OnInit{
       .subscribe({
         next: (product) => this.product.set(product),
         error: (err) => {
-          console.error('Failed to load product details!!', err);
-          this.toast.handleError(err, 'Failed to load product details');
+          console.error('failed to load product details!!', err);
+          this.toast.handleError(err, 'failed to load product details');
           this.product.set(null);
         }
       });
@@ -76,8 +76,8 @@ export class ProductDetailPage implements OnInit{
     this.shoppingListService
       .addItem({ productId: current.id, quantity: this.quantity() })
       .subscribe({
-        next: () => this.toast.success('Added to shopping list!'),
-        error: (err) => this.toast.handleError(err, 'Failed to add item to shopping list')
+        next: () => this.toast.success('added to shopping list!'),
+        error: (err) => this.toast.handleError(err, 'failed to add item to shopping list')
       });
   }
 }

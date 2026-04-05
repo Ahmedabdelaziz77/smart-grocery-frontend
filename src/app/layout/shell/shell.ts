@@ -18,18 +18,23 @@ export class Shell {
   readonly currentUser = this.authService.currentUser;
   readonly role = this.authService.role;
 
+  readonly userInitial = computed(() => {
+    const name = this.currentUser()?.fullName;
+    return name ? name.charAt(0).toUpperCase() : '?';
+  });
+
   readonly navItems = computed(() => {
       if (this.role() === 'ADMIN') {
         return [
-          { label: 'Dashboard', route: '/admin/dashboard' },
-          { label: 'Product Import', route: '/admin/import' },
-          { label: 'Approved Products', route: '/admin/products' }
+          { label: 'Dashboard', route: '/admin/dashboard', icon: 'dashboard' },
+          { label: 'Product Import', route: '/admin/import', icon: 'cloud_download' },
+          { label: 'Approved Products', route: '/admin/products', icon: 'inventory_2' }
         ];
       }
 
       return [
-        { label: 'Grocery Items', route: '/groceries' },
-        { label: 'My Shopping List', route: '/shopping-list' }
+        { label: 'Grocery Items', route: '/groceries', icon: 'shopping_cart' },
+        { label: 'My Shopping List', route: '/shopping-list', icon: 'list_alt' }
       ];
     });
 

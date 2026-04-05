@@ -1,92 +1,182 @@
+// ── Shell layout ──
 .shell {
-  display: grid;
-  grid-template-columns: 260px 1fr;
+  display: flex;
   min-height: 100vh;
 }
 
+// ── Fixed sidebar ──
 .sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 250px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   background: #ffffff;
   border-right: 1px solid #e5e7eb;
+  z-index: 100;
+  overflow-y: auto;
 }
 
 .sidebar__top {
-  padding: 24px 16px;
+  padding: 24px 14px;
 }
 
+// ── Logo ──
 .logo {
-  font-size: 28px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 20px;
   font-weight: 800;
   color: #22c55e;
-  margin-bottom: 32px;
+  padding: 0 10px;
+  margin-bottom: 28px;
+  letter-spacing: -0.3px;
 }
 
+.logo__icon {
+  font-size: 22px;
+}
+
+// ── Navigation ──
 .nav {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 4px;
 }
 
 .nav__link {
-  display: block;
-  padding: 12px 14px;
-  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
   text-decoration: none;
-  color: #111827;
+  color: #4b5563;
+  font-size: 14px;
   font-weight: 500;
-  transition: background 0.2s ease;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.nav__icon {
+  font-size: 20px;
+  opacity: 0.7;
+  transition: opacity 0.15s ease;
 }
 
 .nav__link:hover {
   background: #f3f4f6;
+  color: #111827;
+
+  .nav__icon {
+    opacity: 1;
+  }
 }
 
 .nav__link--active {
-  background: #e5e7eb;
+  background: #dcfce7;
+  color: #15803d;
+  font-weight: 600;
+
+  .nav__icon {
+    opacity: 1;
+    color: #16a34a;
+  }
 }
 
+// ── Sidebar bottom ──
 .sidebar__bottom {
-  padding: 16px;
-  border-top: 1px solid #e5e7eb;
+  padding: 14px;
+  border-top: 1px solid #f3f4f6;
 }
 
+// ── User box ──
 .user-box {
-  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 6px;
+  margin-bottom: 10px;
+}
+
+.user-box__avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: #dbeafe;
+  color: #2563eb;
+  font-size: 14px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.user-box__info {
+  min-width: 0;
 }
 
 .user-box__name {
-  font-weight: 700;
-  margin-bottom: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .user-box__role {
-  font-size: 13px;
-  color: #6b7280;
+  font-size: 12px;
+  color: #9ca3af;
 }
 
+// ── Logout ──
 .logout-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
   width: 100%;
-  border: 0;
-  border-radius: 10px;
-  padding: 12px;
-  background: #ef4444;
-  color: white;
+  height: 38px;
+  border: none;
+  border-radius: 8px;
+  padding: 0;
+  font-size: 13px;
   font-weight: 600;
+  color: #6b7280;
+  background: #f3f4f6;
   cursor: pointer;
-}
+  transition: background 0.15s ease, color 0.15s ease;
 
-.content {
-  background: #f5f7fb;
-}
-
-@media (max-width: 900px) {
-  .shell {
-    grid-template-columns: 1fr;
+  &:hover {
+    background: #fee2e2;
+    color: #dc2626;
   }
+}
 
+.logout-btn__icon {
+  font-size: 18px;
+}
+
+// ── Content area ──
+.content {
+  flex: 1;
+  margin-left: 250px;
+  min-height: 100vh;
+  background: #f8fafc;
+  overflow-y: auto;
+}
+
+// ── Responsive ──
+@media (max-width: 900px) {
   .sidebar {
     display: none;
+  }
+
+  .content {
+    margin-left: 0;
   }
 }

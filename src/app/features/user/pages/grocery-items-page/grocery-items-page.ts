@@ -117,7 +117,7 @@ export class GroceryItemsPage implements OnInit {
 
   addToList(productId: number): void {
     this.shoppingListService.addItem({ productId, quantity: 1 }).subscribe({
-      next: () => this.toast.success('Item added to shopping list'),
+      next: () => this.toast.success('item added to shopping list'),
       error: (err) => this.toast.handleError(err, 'Failed to add item to shopping list')
     });
   }
