@@ -92,3 +92,4 @@ src/app/
 
 ## Video Demo
 
+ [smart-grocery video demo in google drive](https://drive.google.com/file/d/1PXo4yO_V4CWukxKFM-gvtJd1Luwzphtf/view?usp=sharing)
