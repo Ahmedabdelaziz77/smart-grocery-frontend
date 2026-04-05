@@ -1,78 +1,124 @@
 <div class="auth-page">
-  <mat-card class="auth-card">
-    <div class="auth-logo">
-      <div class="auth-logo__icon">🥬</div>
+  <div class="auth-card">
+    <div class="auth-header">
+      <div class="auth-logo">
+        <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none"
+          stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/>
+          <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>
+        </svg>
+      </div>
+      <h1 class="auth-title">SmartGrocery</h1>
+      <p class="auth-subtitle">
+        {{
+          isSignupMode()
+            ? 'Create your account to get started'
+            : 'Sign in to your account'
+        }}
+      </p>
     </div>
-
-    <h1 class="auth-title">SmartGrocery</h1>
-    <p class="auth-subtitle">
-      {{
-        isSignupMode()
-          ? 'Create your account to start managing your grocery shopping list'
-          : 'Enter your credentials to access your account'
-      }}
-    </p>
 
     <form [formGroup]="form" (ngSubmit)="onSubmit()" class="auth-form">
       @if (isSignupMode()) {
-      <div class="field-block">
-        <label class="field-label">Full Name</label>
-        <input appearance="outline" />
-        <input matInput formControlName="fullName" placeholder="John Doe" />
+      <div class="field-group">
+        <label class="field-label" for="fullName">Full Name</label>
+        <div class="input-wrap">
+          <input
+            id="fullName"
+            class="auth-input"
+            type="text"
+            formControlName="fullName"
+            placeholder="John Doe"
+            autocomplete="name" />
+        </div>
         @if (form.get('fullName')?.hasError('required') && form.get('fullName')?.touched) {
-        <mat-error>Full name is required</mat-error>
+        <span class="field-error">Full name is required</span>
         }
         @if (form.get('fullName')?.hasError('minlength') && form.get('fullName')?.touched) {
-        <mat-error>Full name must be at least 3 characters</mat-error>
+        <span class="field-error">Must be at least 3 characters</span>
         }
       </div>
       }
 
-      <div class="field-block">
-        <label class="field-label">Email</label>
-        <mat-form-field appearance="outline">
-          <input matInput type="email" formControlName="email" placeholder="name@example.com" />
-          @if (form.get('email')?.hasError('required') && form.get('email')?.touched) {
-          <mat-error>Email is required</mat-error>
-          }
-          @if (form.get('email')?.hasError('email') && form.get('email')?.touched) {
-          <mat-error>Enter a valid email address</mat-error>
-          }
-        </mat-form-field>
+      <div class="field-group">
+        <label class="field-label" for="email">Email</label>
+        <div class="input-wrap">
+          <input
+            id="email"
+            class="auth-input"
+            type="email"
+            formControlName="email"
+            placeholder="name@example.com"
+            autocomplete="email" />
+        </div>
+        @if (form.get('email')?.hasError('required') && form.get('email')?.touched) {
+        <span class="field-error">Email is required</span>
+        }
+        @if (form.get('email')?.hasError('email') && form.get('email')?.touched) {
+        <span class="field-error">Enter a valid email address</span>
+        }
       </div>
 
-      <div class="field-block">
-        <label class="field-label">Password</label>
-        <mat-form-field appearance="outline">
-          <input matInput type="password" formControlName="password" placeholder="••••••••" />
-          @if (form.get('password')?.hasError('required') && form.get('password')?.touched) {
-          <mat-error>Password is required</mat-error>
-          }
-          @if (form.get('password')?.hasError('minlength') && form.get('password')?.touched) {
-          <mat-error>Password must be at least 6 characters</mat-error>
-          }
-        </mat-form-field>
+      <div class="field-group">
+        <label class="field-label" for="password">Password</label>
+        <div class="input-wrap">
+          <input
+            id="password"
+            class="auth-input"
+            type="password"
+            formControlName="password"
+            placeholder="••••••••"
+            autocomplete="current-password" />
+        </div>
+        @if (form.get('password')?.hasError('required') && form.get('password')?.touched) {
+        <span class="field-error">Password is required</span>
+        }
+        @if (form.get('password')?.hasError('minlength') && form.get('password')?.touched) {
+        <span class="field-error">Must be at least 6 characters</span>
+        }
       </div>
 
       @if (errorMessage()) {
       <div class="auth-error">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="8" x2="12" y2="12"/>
+          <line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
         {{ errorMessage() }}
       </div>
       }
 
-      <button mat-flat-button type="submit" class="submit-btn" [disabled]="isSubmitting()">
-        {{ isSubmitting() ? 'Please wait...' : (isSignupMode() ? 'Sign up' : 'Sign in') }}
+      <button
+        type="submit"
+        class="submit-btn"
+        [class.submit-btn--loading]="isSubmitting()"
+        [disabled]="isSubmitting()">
+        @if (isSubmitting()) {
+          <span class="spinner"></span>
+          Please wait...
+        } @else {
+          {{ isSignupMode() ? 'Create account' : 'Sign in' }}
+        }
       </button>
     </form>
 
+    <div class="auth-divider">
+      <span>or</span>
+    </div>
+
     <div class="auth-footer">
-      <span>
+      <span class="auth-footer__text">
         {{ isSignupMode() ? 'Already have an account?' : "Don't have an account?" }}
       </span>
-
-      <button mat-button type="button" class="switch-btn" (click)="toggleMode()" [disabled]="isSubmitting()">
-        {{ isSignupMode() ? 'Sign in' : 'Sign up' }}
+      <button
+        type="button"
+        class="switch-btn"
+        (click)="toggleMode()"
+        [disabled]="isSubmitting()">
+        {{ isSignupMode() ? 'Sign in' : 'Create account' }}
       </button>
     </div>
-  </mat-card>
+  </div>
 </div>

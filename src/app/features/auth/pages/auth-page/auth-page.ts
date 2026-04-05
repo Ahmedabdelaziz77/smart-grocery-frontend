@@ -1,11 +1,7 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
 import { AuthService } from '../../../../core/services/auth.service';
 import { ToastService } from '../../../../shared/services/toast.service';
 import { Router } from '@angular/router';
@@ -16,11 +12,7 @@ import { finalize } from 'rxjs';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    MatCardModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatIconModule
+    MatButtonModule
   ],
   templateUrl: './auth-page.html',
   styleUrl: './auth-page.scss',
@@ -79,11 +71,11 @@ export class AuthPage {
         .pipe(finalize(() => this.isSubmitting.set(false)))
         .subscribe({
           next: () => {
-            this.toast.success('Account created successfully!');
+            this.toast.success('account created successfully!!');
             this.redirectAfterAuth();
           },
           error: (err) => {
-            const msg = err?.error?.error || 'Signup failed. Please try again.';
+            const msg = err?.error?.error || 'signup failed Please try again.';
             this.errorMessage.set(msg);
             this.toast.error(msg);
           }
@@ -104,7 +96,7 @@ export class AuthPage {
           this.redirectAfterAuth();
         },
         error: (err) => {
-          const msg = err?.error?.error || 'Login failed. Please check your credentials!';
+          const msg = err?.error?.error || 'login failed Please check your credentials!';
           this.errorMessage.set(msg);
           this.toast.error(msg);
         }
